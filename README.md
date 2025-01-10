@@ -1,2 +1,2 @@
-# Medicinal_Herb
+# Chinese_Medicine
 基于SpringBoot和Vue的中医在线问诊与个性化药方推荐系统
