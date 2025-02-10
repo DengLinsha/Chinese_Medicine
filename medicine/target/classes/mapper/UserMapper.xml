@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.herb.mapper.UserMapper">
+
+    <!-- 通过用户名、手机号、邮箱查找用户 -->
+    <select id="findUserByIdentity" parameterType="String" resultType="User">
+        SELECT * FROM medicine.user
+        WHERE username = #{identity} OR phone = #{identity} OR email = #{identity}
+    </select>
+
+    <!-- 通过用户名、手机号、邮箱和密码查找用户 -->
+    <select id="findUserByIdentityAndPassword" parameterType="map" resultType="User">
+        SELECT * FROM medicine.user
+        WHERE (username = #{identity} OR phone = #{identity} OR email = #{identity})
+          AND password = #{password}
+    </select>
+
+    <insert id="add" parameterType="User">
+        insert into medicine.user (username, password, phone, email)
+        values (#{username},#{password},#{phone}, #{email});
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from medicine.user where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="User">
+        update medicine.user set username=#{username},password=#{password}
+        where id=#{id};
+    </update>
+
+    <select id="queryById" parameterType="Integer" resultType="User">
+        select * from medicine.user where id=#{id};
+    </select>
+
+    <select id="queryAll" resultType="User">
+        select * from medicine.user;
+    </select>
+
+</mapper>
