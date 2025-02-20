@@ -1,7 +1,8 @@
 import axios from "axios";
+import { Message } from "element-ui";
 
 const instance = axios.create({
-  baseURL: "http://localhost:9999",
+  baseURL: "/api",
   timeout: 5000,
   responseType: "json",
 });
@@ -13,9 +14,9 @@ instance.interceptors.request.use(
     // 1.添加通用请求头
     config.headers["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
     // 2.格式化请求数据
-    if (config.data) {
-      config.data = JSON.stringify(config.data);
-    }
+    // if (config.data) {
+    //   config.data = JSON.stringify(config.data);
+    // }
     return config;
   },
   (error) => {
@@ -27,8 +28,13 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    if (response.status === 200) {
-      return response.data;
+    const { data} = response
+    const { code, msg, result } = data
+    if (code === 200) {
+      return result;
+    } else {
+      Message.error(msg ? msg : '出错啦，请重试！')
+      return
     }
   },
   (error) => {
@@ -53,7 +59,7 @@ instance.interceptors.response.use(
     //   // 网络错误或超时
     //   console.error("网络错误或超时", error.message);
     // }
-    this.$message.error(error.response?.data?.message || '网络错误，请稍后重试')
+    Message.error(error.response?.data?.message || '网络错误，请稍后重试')
     return Promise.reject(error);
   }
 );

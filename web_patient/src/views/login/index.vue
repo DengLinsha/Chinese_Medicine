@@ -51,7 +51,8 @@ export default {
       isForget: false,
     };
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {},
 };
 </script>

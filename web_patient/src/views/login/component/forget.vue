@@ -102,6 +102,7 @@ export default {
   methods: {
     next() {
       if (this.active++ > 2) this.active = 0;
+      // 根据用户名查找用户
     },
   },
 };

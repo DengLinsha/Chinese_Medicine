@@ -1,17 +1,21 @@
 package com.me.herb.controller;
 
 import com.me.common.Result;
+import com.me.common.ResultEnum;
 import com.me.herb.pojo.User;
 import com.me.herb.service.UserService;
+import com.me.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value="/user")
-public class UserController {
+public class
+UserController {
     @Autowired
     private UserService userService;
 
@@ -40,13 +44,15 @@ public class UserController {
     }
 
     // 登录
-    @PostMapping("login")
-    public Result login(@RequestParam String identity, @RequestParam String password) {
+    @PostMapping("/login")
+    public Result login(@RequestBody Map<String, String> loginData) {
+        String identity = loginData.get("identity");
+        String password = PasswordUtil.desEncrypt(loginData.get("password"));
         User user = userService.login(identity, password);
         if (user != null) {
             return Result.success(user);
         } else {
-            return Result.error();
+            return Result.error(ResultEnum.USERNAME_OR_PASSWORD_ERROR);
         }
     }
 }

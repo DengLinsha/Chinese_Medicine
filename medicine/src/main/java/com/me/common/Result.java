@@ -9,16 +9,16 @@ public class Result<T> {
     // 提示信息
     private String msg;
     // 结果数据
-    private T data;
+    private T result;
     public Result(ResultEnum resultEnum) {
         this.code = resultEnum.getCode();
         this.msg = resultEnum.getMsg();
     }
 
-    public Result(ResultEnum resultEnum, T data) {
+    public Result(ResultEnum resultEnum, T result) {
         this.code = resultEnum.getCode();
         this.msg = resultEnum.getMsg();
-        this.data = data;
+        this.result = result;
     }
 
     public Result(String msg) {
@@ -31,8 +31,8 @@ public class Result<T> {
     }
 
     // 成功返回封装-带数据
-    public  static <T> Result<T> success(T data) {
-        return new Result<T>(ResultEnum.SUCCESS, data);
+    public  static <T> Result<T> success(T result) {
+        return new Result<T>(ResultEnum.SUCCESS, result);
     }
 
     // 失败返回封装-使用默认提示信息

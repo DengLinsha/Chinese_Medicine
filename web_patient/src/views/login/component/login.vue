@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules">
-      <el-form-item prop="userName">
+      <el-form-item prop="identity">
         <el-input
           text
           placeholder="请输入用户名/手机号/邮箱"
-          v-model="ruleForm.userName"
+          v-model="ruleForm.identity"
           clearable
           autocomplete="off"
         >
@@ -41,17 +41,19 @@
 </template>
 
 <script>
+import { login } from "@/api/user";
+import { Encrypt } from "@/utils/secret";
 export default {
   components: {},
   data() {
     return {
       ruleFormRef: null,
       ruleForm: {
-        userName: "",
+        identity: "",
         password: "",
       },
       rules: {
-        userName: [
+        identity: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -64,7 +66,16 @@ export default {
       console.log("忘记密码");
     },
     register() {},
-    login() {},
+    login() {
+      // 对密码进行加密
+      const password = Encrypt(this.ruleForm.password);
+      login({...this.ruleForm, password}).then(res => {
+        if (res) {
+          // 登录成功跳转到主页
+          this.$router.push({path: '/home'})
+        }
+      })
+    },
   },
 };
 </script>

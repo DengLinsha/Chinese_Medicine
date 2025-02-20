@@ -1,6 +1,6 @@
 server:
   #设置端口号
-  port: 8081 #默认端口是8080
+  port: 9999 #默认端口是8080
 spring:
   datasource:
     #数据库用户名
