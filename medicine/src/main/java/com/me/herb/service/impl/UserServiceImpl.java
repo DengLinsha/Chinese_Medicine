@@ -6,8 +6,9 @@ import com.me.herb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,13 +45,20 @@ public class UserServiceImpl implements UserService {
         return userMapper.findUserByIdentityAndPassword(identity, password);
     }
 
-    @Override
-    public User register(User user) {
-        return null;
-    }
 
     @Override
     public User getUserByIdentity(String identity) {
         return userMapper.findUserByIdentity(identity);
     }
+
+    @Override
+    public boolean updatePassword(String identity, String password) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("identity", identity);
+        params.put("password", password);
+
+        int result = userMapper.updateUserPassword(params);
+        return result > 0;
+    }
+
 }

@@ -23,9 +23,10 @@ public interface UserService {
     // 登录
     User login(String username, String password);
 
-    // 注册
-    User register(User user);
 
     // 查询用户是否存在
     User getUserByIdentity(String identity);
+
+    // 修改密码
+    boolean updatePassword(String identity, String password);
 }

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -28,4 +29,7 @@ public interface UserMapper {
 
     // 通过用户名、手机号、邮箱和密码查找用户
     User findUserByIdentityAndPassword(@Param("identity") String identity, @Param("password") String password);
+
+    // 修改密码
+    int updateUserPassword(Map<String, Object> params);
 }

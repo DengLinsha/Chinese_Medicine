@@ -18,6 +18,13 @@
           AND password = #{password}
     </select>
 
+    <!-- 通过用户名、手机号、邮箱修改密码 -->
+    <update id="updateUserPassword" parameterType="map">
+        UPDATE medicine.user
+        SET password = #{password}
+        WHERE (username = #{identity} OR phone = #{identity} OR email = #{identity})
+    </update>
+
     <insert id="add" parameterType="User">
         insert into medicine.user (username, password, phone, email)
         values (#{username},#{password},#{phone}, #{email});
