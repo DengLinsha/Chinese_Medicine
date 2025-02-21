@@ -5,6 +5,7 @@ module.exports = {
   lintOnSave: false,
   productionSourceMap: false,
   devServer: {
+    webSocketServer:false, 
     proxy: {
       '/api': {
         target: 'http://localhost:9999', // 配置好的后端接口地址

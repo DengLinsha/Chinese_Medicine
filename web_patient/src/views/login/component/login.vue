@@ -28,7 +28,12 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="submit-btn" round @click="login"
+        <el-button
+          type="primary"
+          class="submit-btn"
+          round
+          @click="login"
+          :loading="loading"
           >登录</el-button
         >
       </el-form-item>
@@ -58,6 +63,7 @@ export default {
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
+      loading: false
     };
   },
   mounted() {},
@@ -67,14 +73,24 @@ export default {
     },
     register() {},
     login() {
-      // 对密码进行加密
-      const password = Encrypt(this.ruleForm.password);
-      login({...this.ruleForm, password}).then(res => {
-        if (res) {
-          // 登录成功跳转到主页
-          this.$router.push({path: '/home'})
+      this.$refs.ruleFormRef.validate((valid) => {
+        if (valid) {
+          try {
+            this.loading = true;
+            // 对密码进行加密
+            const password = Encrypt(this.ruleForm.password);
+            login({...this.ruleForm, password}).then(res => {
+              if (res) {
+                // 登录成功跳转到主页
+                this.$router.push({path: '/home'})
+              }
+            })
+          } finally {
+            this.loading = false;
+          }
         }
       })
+
     },
   },
 };

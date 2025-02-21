@@ -6,10 +6,10 @@
       :rules="rules"
       label-width="80px"
     >
-      <el-form-item label="用户名" prop="userName">
+      <el-form-item label="用户名" prop="username">
         <el-input
           placeholder="请输入用户名"
-          v-model="ruleForm.userName"
+          v-model="ruleForm.username"
           clearable
           autocomplete="off"
         >
@@ -43,7 +43,7 @@
       </el-form-item>
       <div class="extra-warp">
         <el-button class="submit-btn" @click="cancel">取消</el-button>
-        <el-button type="primary" class="submit-btn" @click="register"
+        <el-button type="primary" class="submit-btn" @click="register" :loading="loading"
           >注册</el-button
         >
       </div>
@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { register } from "@/api/user";
+import { Encrypt } from "@/utils/secret";
 export default {
   components: {},
   data() {
@@ -67,14 +69,14 @@ export default {
     return {
       ruleFormRef: null,
       ruleForm: {
-        userName: "",
+        username: "",
         password: "",
         checkPass: "",
         phone: "",
         email: "",
       },
       rules: {
-        userName: [
+        username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         password: [
@@ -101,6 +103,7 @@ export default {
           },
         ],
       },
+      loading: false
     };
   },
   mounted() {},
@@ -110,14 +113,23 @@ export default {
       this.$emit("switchToLogin");
     },
     register() {
-      this.$refs.ruleFormRef.validate((valid) => {
+      this.$refs.ruleFormRef.validate(async (valid) => {
         if (valid) {
-          console.log(this.ruleForm);
-        } else {
-          console.log("error submit!!");
-          return false;
+          try {
+            this.loading = true;
+            // 对密码进行加密
+            const password = Encrypt(this.ruleForm.password);
+            delete this.ruleForm.checkPass;
+            const res = await register({...this.ruleForm, password})
+            if (res) {
+              // 注册成功跳转到登录页面
+              this.$emit("switchToLogin");
+            }
+          } finally {
+            this.loading = false;
+          }
         }
-      });
+      })
     },
   },
 };
