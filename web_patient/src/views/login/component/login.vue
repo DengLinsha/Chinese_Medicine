@@ -68,10 +68,6 @@ export default {
   },
   mounted() {},
   methods: {
-    forgetPassword() {
-      console.log("忘记密码");
-    },
-    register() {},
     login() {
       this.$refs.ruleFormRef.validate((valid) => {
         if (valid) {
@@ -81,7 +77,9 @@ export default {
             const password = Encrypt(this.ruleForm.password);
             login({...this.ruleForm, password}).then(res => {
               if (res) {
+                localStorage.setItem('userInfo', JSON.stringify(res))
                 // 登录成功跳转到主页
+                this.$message.success("欢迎回来")
                 this.$router.push({path: '/home'})
               }
             })
@@ -90,7 +88,6 @@ export default {
           }
         }
       })
-
     },
   },
 };
