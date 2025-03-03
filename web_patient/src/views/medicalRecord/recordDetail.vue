@@ -1,0 +1,234 @@
+<template>
+  <div>
+    <el-card style="margin-bottom: 20px; width: 100%;">
+      <div slot="header" class="clearfix">
+        <span>病历详情</span>
+      </div>
+      <el-row :gutter="24">
+        <el-col :span="11">
+          <div>
+            <div class="content">
+                <div style="line-height: 40px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.realName }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">患者年龄：</span>{{ record.age }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">患者联系方式：</span>{{ record.phone }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">病情自述：</span>{{ record.desc }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">所属科室：</span>{{ record.department }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.docName }}</div>
+            </div>
+            <!-- <div class="demo-image__preview">
+              <div>
+                <strong style="margin-bottom: 20px"
+                  >病症图片:(点击查看大图)&nbsp;&nbsp;</strong
+                >
+              </div>
+              <el-image
+                style="width: 100px; height: 100px; margin-top: 20px"
+                :src="path + record.pic1"
+                :preview-src-list="[srcList[0]]"
+              >
+              </el-image>
+              <el-image
+                style="width: 100px; height: 100px; margin-left: 20px"
+                :src="path + record.pic2"
+                :preview-src-list="[srcList[1]]"
+              >
+              </el-image>
+              <el-image
+                v-if="record.pic3 != null && record.pic3 != ''"
+                style="width: 100px; height: 100px; margin-left: 20px"
+                :src="path + record.pic3"
+                :preview-src-list="[srcList[2]]"
+              >
+              </el-image>
+            </div> -->
+          </div>
+        </el-col>
+        <el-col :span="1">
+          <div class="line"></div>
+        </el-col>
+        <el-col :span="12">
+          <div v-if="diagnosis != null" style="">
+            <div style="line-height: 40px;"><span style="font-weight: bold;">主诉：</span>{{ diagnosis.complaints }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">现病史：</span>{{ diagnosis.presentHistory }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">既往史：</span>{{ diagnosis.oldHistory }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">诊断结果：</span>{{ diagnosis.result }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">药方：</span>{{ diagnosis.prescription }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">医嘱：</span>{{ diagnosis.orders }}</div>
+          </div>
+          <div v-if="diagnosis == null">
+            <el-empty description="医生还没诊断,请耐心等待">
+              <el-button type="primary" @click="notice">点此通知医生</el-button>
+            </el-empty>
+          </div>
+        </el-col>
+      </el-row>
+
+      <div class="btn" v-if="record.status != 3">
+        <el-button type="primary" @click="endDialog">结束诊断</el-button>
+        <el-button @click="comment">对此诊断有疑问</el-button>
+      </div>
+
+      <div class="btn" v-if="record.status === 3">
+        <el-button @click="comment">对此诊断有疑问</el-button>
+      </div>
+
+      <div class="rate" v-if="show == true" style="margin-top: 10px;">
+        <div>给此次治疗做出您的评价：</div>
+        <el-rate
+            v-model="rateValue"
+            show-text
+            :disabled="rateValue > 0"
+            @change="pushValue()"
+          >
+          </el-rate>
+      </div>
+    </el-card>
+
+    <!-- 评论界面-->
+    <el-drawer
+      title="评论详情"
+      :visible.sync="drawer"
+      size="30%"
+      style="overflow: auto"
+    >
+      <h3 style="text-align: center; margin-bottom: 20px;">向医生提出你的问题吧</h3>
+
+      <!--评论填写-->
+      <el-form :model="commentForm">
+        <el-form-item>
+          <el-input
+            type="textarea"
+            style="width: 95%; margin-left: 20px"
+            v-model="commentForm.content"
+            placeholder="发表交流"
+            autocomplete="off"
+          ></el-input>
+          <el-button
+            type="primary"
+            style="float: right; margin-top: 15px; margin-right: 5px"
+            @click="submitComment"
+            >提交问题</el-button
+          >
+        </el-form-item>
+      </el-form>
+      <el-divider></el-divider>
+      <div v-if="commentsList.length > 0">
+        <div v-for="comment in commentsList" :key="comment.name">
+          <el-row :gutter="15" style="margin-left: 10px">
+            <el-col :span="3">
+              <!-- <div v-if="comment.role == 0">
+                <el-avatar
+                  icon="el-icon-user-solid"
+                  :src="path + comment.img"
+                  :size="40"
+                ></el-avatar>
+              </div>
+              <div v-if="comment.role == 1">
+                <el-avatar
+                  icon="el-icon-user-solid"
+                  :src="path + comment.pic"
+                  :size="40"
+                ></el-avatar>
+              </div> -->
+            </el-col>
+            <el-col :span="12">
+              <div style="font-family: Monaco">
+                {{ comment.role == 1 ? comment.docName + "医生" : comment.userName }}
+              </div>
+              <div style="font-size: small; color: #40c3ff">
+                {{ comment.createTime }}
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="15"
+              ><p style="margin-left: 60px; margin-top: 10px; color: #00060c">
+                {{ comment.content }}
+              </p></el-col
+            >
+            <el-col :span="9" style="margin-top: -90px; margin-left: 210px">
+              <el-button
+                type="text"
+                v-if="comment.role == 1"
+                @click="showReply(comment)"
+                >回复</el-button
+              >
+              <!-- <el-divider  direction="vertical"></el-divider> -->
+              <el-button
+                type="text"
+                v-if="comment.role == 0"
+                style="color: #ec3418"
+                @click="deleteCommentById(comment.id)"
+                >删除</el-button
+              >
+            </el-col>
+          </el-row>
+          <el-divider></el-divider>
+        </div>
+      </div>
+      <div v-if="commentsList.length == 0">
+        <el-empty description="暂无评论"></el-empty>
+      </div>
+    </el-drawer>
+  </div>
+</template>
+
+<script>
+export default {
+  components: {},
+  data() {
+    return {
+        record: {
+            realName: '张三',
+            age: 18,
+            phone: '12345678901',
+            desc: '突然身上通红，起了很多小疹子',
+            department: '皮肤科',
+            docName: '邓林莎',
+            status: 0
+        },
+        diagnosis: null,
+        show: false,
+        rateValue: 0,
+        drawer: false,
+        commentForm: {
+          content: ''
+        },
+        commentsList: [],
+    };
+  },
+  mounted() {},
+  methods: {
+    endDialog() {
+      this.$confirm('是否结束诊断?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message.success("恭喜您康复!祝您身体健康!")
+        this.show = true
+      });
+    },
+    comment() {
+      this.drawer = true;
+    }
+  },
+};
+</script>
+<style scoped lang="scss">
+.line{
+  width:15px;
+  height:370px;
+  border-right: solid rgb(170, 170, 170) 1px;
+}
+
+.btn,
+.rate {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+</style>

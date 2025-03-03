@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%;">
     <el-container style="height: 100%">
       <el-header class="flex-align-center">
         <el-button type="text" @click="isOpen"
