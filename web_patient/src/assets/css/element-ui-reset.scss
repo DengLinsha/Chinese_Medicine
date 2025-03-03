@@ -1,0 +1,32 @@
+$primary-btn-color: #a8824a;
+
+$hover-btn-color: #dbaa60;
+
+.el-input.is-active .el-input__inner,
+.el-input__inner:focus {
+  border-color: $primary-btn-color;
+}
+
+// 修改默认按钮颜色
+.el-button--primary {
+    background-color: $primary-btn-color;
+    border: $primary-btn-color;
+}
+
+.el-button {
+    &:hover {
+      color: #fff;
+      background-color: $hover-btn-color;
+      border-color: $hover-btn-color;
+    }
+    &:active {
+      color: #fff;
+      background-color: $hover-btn-color;
+      border-color: $hover-btn-color;
+    }
+    &:focus {
+      color: #fff;
+      background-color: $hover-btn-color;
+      border-color: $hover-btn-color;
+    }
+}

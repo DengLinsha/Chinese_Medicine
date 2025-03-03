@@ -15,9 +15,9 @@ const routes = [
     component: () => import('@/views/home/index.vue'),
     children: [
       {
-        path:"/addRecords",
-        name:"addRecords",
-        component: () => import('@/views/medicalRecord/addRecords.vue')
+        path:"/addRecord",
+        name:"addRecord",
+        component: () => import('@/views/medicalRecord/addRecord.vue')
       },
       {
         path:"/allRecords",

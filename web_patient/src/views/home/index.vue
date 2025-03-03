@@ -36,7 +36,7 @@
       <el-container>
         <el-aside :width="width">
           <el-menu style="height: 100%" :collapse="isCollapse" router>
-            <el-menu-item index="/addRecords">
+            <el-menu-item index="/addRecord">
               <i class="el-icon-service"></i>
               <span slot="title">病症诊断</span>
             </el-menu-item>

@@ -92,7 +92,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .submit-btn {
   width: 100%;
   letter-spacing: 2px;
@@ -116,30 +116,4 @@ export default {
   margin-bottom: 16px;
 }
 
-.el-input.is-active .el-input__inner,
-.el-input__inner:focus {
-  border-color: var(--base-color);
-}
-.el-button--primary {
-  background-color: var(--base-color);
-  border: var(--base-color);
-}
-
-.el-button {
-  &:hover {
-    color: #fff;
-    background-color: #dbaa60;
-    border-color: #dbaa60;
-  }
-  &:active {
-    color: #fff;
-    background-color: #dbaa60;
-    border-color: #dbaa60;
-  }
-  &:focus {
-    color: #fff;
-    background-color: #dbaa60;
-    border-color: #dbaa60;
-  }
-}
 </style>
