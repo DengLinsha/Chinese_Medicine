@@ -36,9 +36,9 @@
 </template>
 
 <script>
-import login from "./component/login.vue";
-import register from "./component/register.vue";
-import forget from "./component/forget.vue";
+import login from "./components/login.vue";
+import register from "./components/register.vue";
+import forget from "./components/forget.vue";
 export default {
   components: {
     login,

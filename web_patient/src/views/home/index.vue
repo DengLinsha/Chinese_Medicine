@@ -48,6 +48,11 @@
               <i class="el-icon-user"></i>
               <span slot="title">医师列表</span>
             </el-menu-item>
+            <!-- 医生 -->
+            <el-menu-item index="/diagnosisList">
+              <i class="el-icon-user"></i>
+              <span slot="title">诊断列表</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>

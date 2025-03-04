@@ -1,15 +1,12 @@
 <template>
-  <div style="margin-top: -10px">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <h2>咨询列表</h2>
-      </div>
+  <div>
+    <div class="box-card">
       <div v-for="item in recordList" :key="item.id">
-        <el-descriptions :column="3" border style="margin-bottom: 20px">
+        <el-descriptions title="病历信息" :column="3" border style="margin-bottom: 20px">
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-user"></i>
-              姓名
+              患者姓名
             </template>
             {{ item.realName }}
           </el-descriptions-item>
@@ -36,20 +33,6 @@
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
-              <i class="el-icon-tickets"></i>
-              所属科室
-            </template>
-            {{ item.department }}
-          </el-descriptions-item>
-          <el-descriptions-item>
-            <template slot="label">
-              <i class="el-icon-service"></i>
-              诊治医生
-            </template>
-            {{ item.docName }}
-          </el-descriptions-item>
-          <el-descriptions-item>
-            <template slot="label">
               <i class="el-icon-notebook-1"></i>
               病历状态
             </template>
@@ -65,7 +48,8 @@
           </el-descriptions-item>
         </el-descriptions>
       </div>
-    </el-card>
+    </div>
+    
     <div class="pagination">
       <el-pagination
         @current-change="(val) => handleQuery({ page: val })"
@@ -84,20 +68,21 @@
 
 <script>
 export default {
-  components: {},
-  data() {
+  components: {
+
+  },
+  data () {
     return {
-      title: '咨询列表',
       recordList: [],
       tableParams: {
         page: 1,
         pageSize: 5,
       },
       total: 0,
-    };
+    }
   },
   mounted() {
-    this.handleQuery();
+    this.handleQuery()
   },
   methods: {
     handleQuery(params = {}) {
@@ -168,22 +153,18 @@ export default {
     },
     goRecordDetail(item) {
       this.$router.push({
-        path: '/recordDetail'
+        path: '/diagnosis/detail'
       })
     }
   },
-};
-</script>
-<style scoped lang="scss">
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
 }
 
+</script>
+<style scoped lang='scss'>
+.box-card {
+  height: calc(100vh - 200px);
+  overflow: auto;
+}
 .text-ellipsis {
   display: inline-block;
   white-space: nowrap;
@@ -192,15 +173,9 @@ export default {
   max-width: 330px; // 根据需要调整最大宽度
 }
 
-.box-card {
-  height: calc(100vh - 132px);
-  overflow: auto;
-}
-
 .pagination {
   height: 50px;
   margin-top: 16px;
   margin-left: 60%;
 }
 </style>
-

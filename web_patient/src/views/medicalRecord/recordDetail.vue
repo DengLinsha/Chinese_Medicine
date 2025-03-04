@@ -75,45 +75,39 @@
       <div class="rate" v-if="show == true" style="margin-top: 10px;">
         <div>给此次治疗做出您的评价：</div>
         <el-rate
-            v-model="rateValue"
+            v-model="score"
             show-text
-            :disabled="rateValue > 0"
-            @change="pushValue()"
+            @change="pushRateValue"
           >
           </el-rate>
       </div>
     </el-card>
 
     <!-- 评论界面-->
-    <el-drawer
-      title="评论详情"
-      :visible.sync="drawer"
-      size="30%"
-      style="overflow: auto"
-    >
+    <el-drawer title="评论详情" :visible.sync="drawer">
       <h3 style="text-align: center; margin-bottom: 20px;">向医生提出你的问题吧</h3>
-
       <!--评论填写-->
       <el-form :model="commentForm">
         <el-form-item>
           <el-input
             type="textarea"
-            style="width: 95%; margin-left: 20px"
+            style="width: 95%; margin-left: 10px"
             v-model="commentForm.content"
             placeholder="发表交流"
             autocomplete="off"
           ></el-input>
           <el-button
             type="primary"
-            style="float: right; margin-top: 15px; margin-right: 5px"
+            style="float: right; margin-top: 15px; margin-right: 10px"
             @click="submitComment"
             >提交问题</el-button
           >
         </el-form-item>
       </el-form>
       <el-divider></el-divider>
+      <!-- 评论列表 -->
       <div v-if="commentsList.length > 0">
-        <div v-for="comment in commentsList" :key="comment.name">
+        <div v-for="comment in commentsList" :key="comment.id">
           <el-row :gutter="15" style="margin-left: 10px">
             <el-col :span="3">
               <!-- <div v-if="comment.role == 0">
@@ -148,13 +142,14 @@
               </p></el-col
             >
             <el-col :span="9" style="margin-top: -90px; margin-left: 210px">
+              <!-- 医生 -->
               <el-button
                 type="text"
                 v-if="comment.role == 1"
                 @click="showReply(comment)"
                 >回复</el-button
               >
-              <!-- <el-divider  direction="vertical"></el-divider> -->
+              <!-- 患者 -->
               <el-button
                 type="text"
                 v-if="comment.role == 0"
@@ -180,17 +175,17 @@ export default {
   data() {
     return {
         record: {
-            realName: '张三',
-            age: 18,
-            phone: '12345678901',
-            desc: '突然身上通红，起了很多小疹子',
-            department: '皮肤科',
-            docName: '邓林莎',
-            status: 0
+          realName: '张三',
+          age: 18,
+          phone: '12345678901',
+          desc: '突然身上通红，起了很多小疹子',
+          department: '皮肤科',
+          docName: '邓林莎',
+          status: 0
         },
         diagnosis: null,
         show: false,
-        rateValue: 0,
+        score: 0,
         drawer: false,
         commentForm: {
           content: ''
