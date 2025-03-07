@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-top: -10px">
-    <el-card class="box-card">
+  <div style="height: 100%;">
+    <el-card style="width: 100%;">
       <div slot="header" class="clearfix">
         <h2>咨询列表</h2>
       </div>
@@ -192,9 +192,9 @@ export default {
   max-width: 330px; // 根据需要调整最大宽度
 }
 
-.box-card {
-  height: calc(100vh - 132px);
-  overflow: auto;
+:deep(.el-card__body) {
+  height: calc(100vh - 200px);
+  overflow: auto
 }
 
 .pagination {

@@ -174,4 +174,9 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+:deep(.el-card__body) {
+  height: auto;
+  overflow: initial;
+}
+</style>

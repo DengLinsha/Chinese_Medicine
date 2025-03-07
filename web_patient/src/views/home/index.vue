@@ -20,6 +20,7 @@
             <el-dropdown-item icon="el-icon-user-solid">{{ userInfo.username }}</el-dropdown-item>
             <hr />
             <el-dropdown-item icon="el-icon-key" @click.native="updatePasswordVisible = true">修改密码</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-message" @click.native="updateInfoVisible = true">编辑信息</el-dropdown-item>
             <!-- <el-dropdown-item
               icon="el-icon-upload"
               @click.native="uploadVisible = true"
@@ -63,7 +64,7 @@
 
     <!-- 修改密码 -->
     <el-dialog title="修改密码" width=30% :visible.sync="updatePasswordVisible" style="text-align:center;">
-      <el-form :model="passwordForm" :rules="passwordRule" ref="passwordForm">
+      <el-form :model="passwordForm" :rules="passwordRule" ref="passwordFormRef">
         <el-form-item label="原密码" prop="oldpassword">
           <el-input v-model="passwordForm.oldpassword" placeholder="请输入原密码" autocomplete="off"></el-input>
         </el-form-item>
@@ -72,9 +73,17 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="reset('passwordForm')">取 消</el-button>
-        <el-button type="primary" @click="updatePassword('passwordForm')">确 定</el-button>
+        <el-button @click="reset">取 消</el-button>
+        <el-button type="primary" @click="updatePassword">确 定</el-button>
       </div>
+    </el-dialog>
+    <!-- 修改个人信息 -->
+     <el-dialog title="修改个人信息" width=30% :visible.sync="updateInfoVisible" style="text-align:center;">
+      <el-form :model="patientInfoForm" :rules="patientInfoRule" ref="patientInfoFormRef">
+        <el-form-item label="用户名">
+          <el-input v-model="passwordForm.user" placeholder="请输入新密码" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -90,6 +99,7 @@ export default {
       width: "200px",
       isCollapse: false,
       updatePasswordVisible: false,
+      updateInfoVisible: false,
       passwordForm:{
         oldpassword:'',
         newpassword:''
@@ -102,9 +112,32 @@ export default {
           { required: true, message: '请输入新密码', trigger: 'blur' },
         ]
       },
+      patientInfoForm: {
+        username: '',
+        name: '',
+        sex: '',
+        age: '',
+        role: '',
+        presentHistory: '',
+        allergiesHistory: '',
+        habits: ''
+      },
+      patientInfoRule: {
+        name:[
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+        ],
+        sex:[
+          { required: true, message: '请选择性别', trigger: 'blur' },
+        ],
+        age:[
+          {required: true, message: '请输入年龄', trigger: 'blur'}
+        ]
+      }
     };
   },
-  mounted() {},
+  mounted() {
+    this.patientInfoForm.username = this.userInfo.username
+  },
   methods: {
     isOpen() {
       if (this.isCollapse) {
@@ -116,7 +149,7 @@ export default {
     },
 
     reset(){
-      this.$refs.passwordForm.resetFields();
+      this.$refs.passwordFormRef.resetFields();
       this.updatePasswordVisible=false;
     },
 

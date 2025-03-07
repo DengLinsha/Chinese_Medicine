@@ -14,19 +14,47 @@ $hover-btn-color: #dbaa60;
 }
 
 .el-button {
-    &:hover {
-      color: #fff;
-      background-color: $hover-btn-color;
-      border-color: $hover-btn-color;
-    }
-    &:active {
-      color: #fff;
-      background-color: $hover-btn-color;
-      border-color: $hover-btn-color;
-    }
-    &:focus {
-      color: #fff;
-      background-color: $hover-btn-color;
-      border-color: $hover-btn-color;
-    }
+  &:hover {
+    color: #fff;
+    background-color: $hover-btn-color;
+    border-color: $hover-btn-color;
+  }
+  &:active {
+    color: #fff;
+    background-color: $hover-btn-color;
+    border-color: $hover-btn-color;
+  }
+  &:focus {
+    color: #fff;
+    background-color: $hover-btn-color;
+    border-color: $hover-btn-color;
+  }
+}
+
+.el-card__body {
+  height: calc(100vh - 152px);
+  overflow: auto
+}
+
+.el-card__body::-webkit-scrollbar {
+  width: 8px; /* 滚动条的宽度 */
+}
+
+.el-card__body::-webkit-scrollbar-track {
+  background: #f5f5f5; /* 轨道颜色 */
+  border-radius: 4px; /* 轨道圆角 */
+}
+
+.el-card__body::-webkit-scrollbar-thumb {
+  background: #a8824a; /* 滑块颜色 */
+  border-radius: 4px; /* 滑块圆角 */
+}
+
+.el-card__body::-webkit-scrollbar-thumb:hover {
+  background: #8b7a45; /* 滑块悬停时的颜色 */
+}
+
+
+.el-divider--horizontal {
+  margin: 8px 0;
 }

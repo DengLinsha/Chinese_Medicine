@@ -7,12 +7,12 @@
             </div>
             <div>
                 <div class="content">
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.realName }}</div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">患者年龄：</span>{{ record.age }}</div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">患者联系方式：</span>{{ record.phone }}</div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">病情自述：</span>{{ record.desc }}</div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">所属科室：</span>{{ record.department }}</div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.docName }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.realName }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">患者年龄：</span>{{ record.age }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">患者联系方式：</span>{{ record.phone }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">病情自述：</span>{{ record.desc }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">所属科室：</span>{{ record.department }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.docName }}</div>
                 </div>
                 <!-- <div class="demo-image__preview">
                     <div>
@@ -48,7 +48,7 @@
             <div slot="header" class="clearfix">
                 <span>诊断结果</span>
             </div>
-            <el-form ref="diagnosisRef" :model="diagnosis" label-width="110px">
+            <el-form ref="diagnosisRef" :model="diagnosis" label-width="70px">
                 <el-form-item label="主诉">
                     <el-input type="textarea" v-model="diagnosis.complaints" ></el-input>
                 </el-form-item>
@@ -61,7 +61,7 @@
                     <el-form-item label="诊断结果">
                     <el-input type="textarea" @blur="queryRecommendList()" placeholder="输入您的诊断结果"  v-model="diagnosis.result" ></el-input>
                 </el-form-item>
-                <el-form-item label="药方/治疗方案">
+                <el-form-item label="治疗方案">
                     <el-input type="textarea" v-model="diagnosis.prescription" ></el-input>
                 </el-form-item>
                 <el-form-item label="医嘱">
@@ -79,20 +79,20 @@
     <div class="recommend-container t-borderStyle">
         <el-card style="width: 100%;">
             <div slot="header" class="clearfix">
-                <span>诊断&&药方推荐列表</span>
+                <span>药方推荐列表</span>
             </div>
             <div v-if="recommendList.length==0">
                 <el-empty :image-size="200"></el-empty>
             </div>
-            <div v-if="recommendList.length>0">
-                <div style="margin-left:15px;" v-for="recommend in recommendList" :key="recommend.id">
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">治疗医生：</span>{{ recommend.docName }}</div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">诊断结果：</span>{{ recommend.result }}</div>
-                    <div style="line-height: 40px; display: flex; align-items: center;">
+            <div v-else>
+                <div v-for="recommend in recommendList" :key="recommend.id">
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">治疗医生：</span>{{ recommend.docName }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">诊断结果：</span>{{ recommend.result }}</div>
+                    <div style="line-height: 30px; display: flex; align-items: center;">
                         <span style="font-weight: bold;">患者评分：</span>
                         <el-rate v-model="recommend.score" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
                     </div>
-                    <div style="line-height: 40px;"><span style="font-weight: bold;">治疗方案/药方：</span>{{ recommend.prescription }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">治疗方案/药方：</span>{{ recommend.prescription }}</div>
                     <el-link @click="recommendDetail(recommend.recordId)" type="primary">点击查看详情</el-link>
                     <el-divider></el-divider>
                 </div>
@@ -137,7 +137,7 @@ export default {
                 recordId: 1
             },
             {
-                id: 1,
+                id: 2,
                 docName: '邓林莎',
                 result: '过敏',
                 score: 4.5,
@@ -145,7 +145,23 @@ export default {
                 recordId: 1
             },
             {
-                id: 1,
+                id: 3,
+                docName: '邓林莎',
+                result: '过敏',
+                score: 4.5,
+                prescription: '氯雷他定片一天一次，一次一颗。',
+                recordId: 1
+            },
+            {
+                id: 4,
+                docName: '邓林莎',
+                result: '过敏',
+                score: 4.5,
+                prescription: '氯雷他定片一天一次，一次一颗。',
+                recordId: 1
+            },
+            {
+                id: 5,
                 docName: '邓林莎',
                 result: '过敏',
                 score: 4.5,
@@ -192,8 +208,5 @@ export default {
     height: 100%;
 }
 
-:deep(.el-card__body) {
-    height: calc(100vh - 152px);
-    overflow: auto
-}
+
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%;width: 100%;">
     <div class="box-card">
       <div v-for="item in recordList" :key="item.id">
         <el-descriptions title="病历信息" :column="3" border style="margin-bottom: 20px">
@@ -71,6 +71,7 @@ export default {
   components: {
 
   },
+  props: ['activeName'],
   data () {
     return {
       recordList: [],
@@ -116,7 +117,7 @@ export default {
           desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
           department: "皮肤科",
           docName: "邓林莎",
-          status: 1,
+          status: 3,
         },
         {
           id: 4,
@@ -126,7 +127,7 @@ export default {
           desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
           department: "皮肤科",
           docName: "邓林莎",
-          status: 1,
+          status: 3,
         },
         {
           id: 5,
@@ -136,7 +137,7 @@ export default {
           desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
           department: "皮肤科",
           docName: "邓林莎",
-          status: 1,
+          status: 2,
         },
         {
           id: 6,
@@ -149,6 +150,9 @@ export default {
           status: 1,
         },
       ];
+      if (this.activeName === 'noDiagnosis') {
+        this.recordList = this.recordList.filter(item => item.status === 0 || item.status === 1)
+      }
       this.total = this.recordList.length;
     },
     goRecordDetail(item) {
@@ -165,6 +169,25 @@ export default {
   height: calc(100vh - 200px);
   overflow: auto;
 }
+
+.box-card::-webkit-scrollbar {
+  width: 8px; /* 滚动条的宽度 */
+}
+
+.box-card::-webkit-scrollbar-track {
+  background: #f5f5f5; /* 轨道颜色 */
+  border-radius: 4px; /* 轨道圆角 */
+}
+
+.box-card::-webkit-scrollbar-thumb {
+  background: #a8824a; /* 滑块颜色 */
+  border-radius: 4px; /* 滑块圆角 */
+}
+
+.box-card::-webkit-scrollbar-thumb:hover {
+  background: #8b7a45; /* 滑块悬停时的颜色 */
+}
+
 .text-ellipsis {
   display: inline-block;
   white-space: nowrap;
