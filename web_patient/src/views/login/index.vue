@@ -77,8 +77,8 @@ export default {
     flex-direction: column;
     height: 100%;
     .login-warp-main-title {
-      height: 130px;
-      line-height: 130px;
+      height: 100px;
+      line-height: 100px;
       font-size: 26px;
       font-weight: 800;
       text-align: center;

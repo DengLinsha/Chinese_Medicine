@@ -53,7 +53,7 @@
                     <el-input type="textarea" v-model="diagnosis.complaints" ></el-input>
                 </el-form-item>
                 <el-form-item label="现病史">
-                <el-input type="textarea" v-model="diagnosis.presentHistory" placeholder="输入病人的现病史" ></el-input>
+                    <el-input type="textarea" v-model="diagnosis.presentHistory" placeholder="输入病人的现病史" ></el-input>
                 </el-form-item>
                 <el-form-item label="既往史">
                     <el-input type="textarea" v-model="diagnosis.oldHistory" placeholder="输入病人的既往史" ></el-input>

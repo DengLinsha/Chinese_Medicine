@@ -26,8 +26,8 @@
     </update>
 
     <insert id="add" parameterType="User">
-        insert into medicine.user (username, password, phone, email)
-        values (#{username},#{password},#{phone}, #{email});
+        insert into medicine.user (username, password, phone, email, role)
+        values (#{username},#{password},#{phone}, #{email}, #{role});
     </insert>
 
     <delete id="delete" parameterType="Integer">

@@ -6,6 +6,12 @@
       :rules="rules"
       label-width="80px"
     >
+      <el-form-item label="角色" prop="role">
+        <el-radio-group v-model="ruleForm.role">
+          <el-radio :label="0">患者</el-radio>
+          <el-radio :label="1">医师</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="用户名" prop="username">
         <el-input
           placeholder="请输入用户名"
@@ -14,6 +20,15 @@
           autocomplete="off"
         >
         </el-input>
+      </el-form-item>
+      <el-form-item label="手机号" prop="phone">
+        <el-input
+          placeholder="请输入手机号"
+          v-model="ruleForm.phone"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input placeholder="请输入邮箱" v-model="ruleForm.email"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input
@@ -31,15 +46,6 @@
           v-model="ruleForm.checkPass"
           autocomplete="off"
         ></el-input>
-      </el-form-item>
-      <el-form-item label="手机号" prop="phone">
-        <el-input
-          placeholder="请输入手机号"
-          v-model="ruleForm.phone"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input placeholder="请输入邮箱" v-model="ruleForm.email"></el-input>
       </el-form-item>
       <div class="extra-warp">
         <el-button class="submit-btn" @click="cancel">取消</el-button>
@@ -69,6 +75,7 @@ export default {
     return {
       ruleFormRef: null,
       ruleForm: {
+        role: '',
         username: "",
         password: "",
         checkPass: "",
@@ -76,6 +83,9 @@ export default {
         email: "",
       },
       rules: {
+        role: [
+          { required: true, message: "请选择用户角色", trigger: "change" },
+        ],
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
@@ -91,7 +101,7 @@ export default {
           {
             pattern: /^1[3-9]\d{9}$/,
             message: "请输入有效的电话号码！",
-            trigger: ["blur", "change"],
+            trigger: "blur",
           },
         ],
         email: [
@@ -99,7 +109,7 @@ export default {
           {
             type: "email",
             message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"],
+            trigger: "blur",
           },
         ],
       },
@@ -119,9 +129,9 @@ export default {
             this.loading = true;
             // 对密码进行加密
             const password = Encrypt(this.ruleForm.password);
-            delete this.ruleForm.checkPass;
             const res = await register({...this.ruleForm, password})
             if (res) {
+              this.$message.success("注册成功")
               // 注册成功跳转到登录页面
               this.$emit("switchToLogin");
             }
@@ -140,5 +150,10 @@ export default {
   letter-spacing: 2px;
   padding: 10px;
   margin-top: 15px;
+}
+.extra-warp {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
 }
 </style>

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ UserController {
                 return Result.error("注册失败，请稍后再试");
             }
         } catch (DataIntegrityViolationException e) {
+            System.out.println(e.getMessage());
             return Result.error("用户名/电话号码/邮箱已存在！");
         } catch (Exception e) {
             // 其他异常

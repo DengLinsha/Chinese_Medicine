@@ -73,17 +73,71 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="reset">取 消</el-button>
+        <el-button @click="reset('passwordFormRef')">取 消</el-button>
         <el-button type="primary" @click="updatePassword">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 修改个人信息 -->
-     <el-dialog title="修改个人信息" width=30% :visible.sync="updateInfoVisible" style="text-align:center;">
-      <el-form :model="patientInfoForm" :rules="patientInfoRule" ref="patientInfoFormRef">
-        <el-form-item label="用户名">
-          <el-input v-model="passwordForm.user" placeholder="请输入新密码" autocomplete="off"></el-input>
-        </el-form-item>
+     <el-dialog title="修改个人信息" width=65% :visible.sync="updateInfoVisible">
+      <el-form :model="patientInfoForm" :rules="patientInfoRule" ref="patientInfoFormRef" label-width="80px">
+        <el-row :gutter="30">
+          <el-col :span="12">
+            <el-form-item label="用户名">
+              <el-input v-model="patientInfoForm.username" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="patientInfoForm.name" placeholder="请输入姓名" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="sex">
+              <el-switch 
+                v-model="patientInfoForm.sex"
+                active-color="#a8824a"
+                inactive-color=""
+                active-value="0"
+                active-text="男"
+                inactive-value="1"
+                inactive-text="女">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="年龄" prop="age">
+              <el-input v-model="patientInfoForm.age" placeholder="请输入年龄" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="角色" prop="role">
+              <el-radio-group v-model="patientInfoForm.role">
+                <el-radio :label="0">患者</el-radio>
+                <el-radio :label="1">医师</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="既往史">
+              <el-input type="textarea" v-model="patientInfoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="过敏史">
+              <el-input type="textarea" v-model="patientInfoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="生活习惯">
+              <el-input type="textarea" v-model="patientInfoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="reset('patientInfoFormRef')">取 消</el-button>
+        <el-button type="primary" @click="updatePatientInfo">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -115,10 +169,10 @@ export default {
       patientInfoForm: {
         username: '',
         name: '',
-        sex: '',
+        sex: '0',
         age: '',
-        role: '',
-        presentHistory: '',
+        role: 0,
+        oldHistory: '',
         allergiesHistory: '',
         habits: ''
       },
@@ -131,7 +185,10 @@ export default {
         ],
         age:[
           {required: true, message: '请输入年龄', trigger: 'blur'}
-        ]
+        ],
+        role:[
+          {required: true, message: '请选择角色', trigger: 'change'}
+        ],
       }
     };
   },
@@ -148,15 +205,24 @@ export default {
       this.isCollapse = !this.isCollapse;
     },
 
-    reset(){
-      this.$refs.passwordFormRef.resetFields();
-      this.updatePasswordVisible=false;
+    reset(formName){
+      this.$refs[formName].resetFields();
+      if (formName === 'passwordFormRef') {
+        this.updatePasswordVisible=false;
+      } else if (formName === 'patientInfoFormRef') {
+        this.updateInfoVisible=false;
+      }
     },
 
     async updatePassword() {
       const password = Encrypt(this.passwordForm.newpassword);
       await updatePassword({identity: this.userInfo.username, password});
-      this.reset();
+      this.reset('passwordFormRef');
+    },
+
+    updatePatientInfo() {
+      console.log(this.patientInfoForm);
+      
     },
 
     logout() {
@@ -179,7 +245,7 @@ export default {
         //   message: '已取消退出登录'
         // });          
       });
-    }
+    },
   },
 };
 </script>
@@ -192,4 +258,6 @@ export default {
   height: 100%;
   width: 200px;
 }
+
+
 </style>

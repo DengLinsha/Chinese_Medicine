@@ -58,3 +58,22 @@ $hover-btn-color: #dbaa60;
 .el-divider--horizontal {
   margin: 8px 0;
 }
+
+.el-switch__label.is-active,
+.el-radio__input.is-checked+.el-radio__label {
+  color: var(--base-color);
+}
+
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: var(--base-color);
+  background: var(--base-color);
+}
+
+.el-radio__inner:hover {
+  border-color: var(--base-color);
+}
+
+// .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+//   background-color: #fffbec;
+//   color: var(--base-color);
+// }
