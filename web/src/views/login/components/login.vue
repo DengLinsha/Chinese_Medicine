@@ -77,6 +77,9 @@ export default {
             const password = Encrypt(this.ruleForm.password);
             login({...this.ruleForm, password}).then(res => {
               if (res) {
+                res.password = Encrypt(res.password)
+                console.log(res.password);
+                
                 localStorage.setItem('userInfo', JSON.stringify(res))
                 // 登录成功跳转到主页
                 this.$message.success("欢迎回来")

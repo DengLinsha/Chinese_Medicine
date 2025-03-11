@@ -72,7 +72,7 @@ UserController {
     public Result findPassword(@RequestParam String identity) {
         User user = userService.getUserByIdentity(identity);
         if (user != null) {
-            return Result.success(user.getId());
+            return Result.success(user.getUser_id());
         } else {
             return Result.error("用户不存在");
         }
