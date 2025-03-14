@@ -12,6 +12,9 @@ spring:
     url: jdbc:mysql://localhost:3306/medicine?serverTimezone=UTC&userUnicode=true&characterEncoding=utf-8
     #设置驱动类
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
 # 配置mybatis
 mybatis:
   #指定pojo扫描包位置让mybatis自动扫描到指定义的pojo包下

@@ -15,8 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value="/user")
-public class
-UserController {
+public class UserController {
     @Autowired
     private UserService userService;
 
@@ -72,7 +71,7 @@ UserController {
     public Result findPassword(@RequestParam String identity) {
         User user = userService.getUserByIdentity(identity);
         if (user != null) {
-            return Result.success(user.getUser_id());
+            return Result.success(user.getUserId());
         } else {
             return Result.error("用户不存在");
         }

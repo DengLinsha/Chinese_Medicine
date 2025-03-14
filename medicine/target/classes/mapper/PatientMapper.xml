@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.herb.mapper.PatientMapper">
+    <!-- 更新患者信息 -->
+    <update id="updatePatientInfo" parameterType="Patient">
+        INSERT INTO patient (userId, name, sex, age, oldHistory, allergiesHistory, habits)
+        VALUES (#{userId}, #{name}, #{sex}, #{age}, #{oldHistory}, #{allergiesHistory}, #{habits})
+            ON DUPLICATE KEY UPDATE
+                 name = VALUES(name),
+                 sex = VALUES(sex),
+                 age = VALUES(age),
+                 oldHistory = VALUES(oldHistory),
+                 allergiesHistory = VALUES(allergiesHistory),
+                 habits = VALUES(habits)
+    </update>
+
+    <!-- 根据 userId 查询患者信息 -->
+    <select id="getPatientByUserId" parameterType="int" resultType="Patient">
+        SELECT * FROM patient WHERE userId = #{userId}
+    </select>
+</mapper>

@@ -13,7 +13,7 @@ import java.util.Date;
 //使用@NoArgsConstructor自动生成无参构造
 @NoArgsConstructor
 public class User {
-    private Integer user_id;
+    private Integer userId;
     private String username;
     private String password;
     private String phone;
