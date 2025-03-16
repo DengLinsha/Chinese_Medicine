@@ -5,90 +5,121 @@
         <h2>提交病历</h2>
       </div>
       <el-form
-        :model="addRecordForm"
+        :model="recordInfoForm"
         :rules="addRecordRules"
-        ref="addRecordFormRef"
+        ref="recordInfoFormRef"
         label-width="150px"
       >
-        <el-form-item label="患者姓名" prop="name">
-          <el-input
-            v-model="addRecordForm.name"
-            placeholder="请输入姓名"
-            style="width: 150px"
-          />
-        </el-form-item>
-
-        <el-form-item label="年龄" prop="age">
-          <el-input
-            type="number"
-            v-model="addRecordForm.age"
-            placeholder="请输入年龄"
-            style="width: 150px"
-          />
-        </el-form-item>
-
-        <el-form-item prop="docId" label="选择医生">
-          <el-select
-            v-model="addRecordForm.city"
-            clearable
-            placeholder="请选择地区"
-            style="width: 150px; margin-right: 10px"
-          >
-            <el-option
-              v-for="item in cities"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <el-select
-            v-model="addRecordForm.hospital"
-            clearable
-            placeholder="请选择医院"
-            style="width: 150px; margin-right: 10px"
-          >
-            <el-option
-              v-for="item in hospitalList"
-              :key="item.hospitalName"
-              :label="item.hospitalName"
-              :value="item.hospitalName"
-            />
-          </el-select>
-          <el-select
-            v-model="addRecordForm.department"
-            clearable
-            placeholder="请选择科室"
-            style="width: 150px; margin-right: 10px"
-          >
-            <el-option
-              v-for="item in departmentList"
-              :key="item.departmentName"
-              :label="item.departmentName"
-              :value="item.departmentName"
-            />
-          </el-select>
-          <el-select
-            v-model="addRecordForm.docId"
-            clearable
-            placeholder="请选择医生"
-            style="width: 150px"
-          >
-            <el-option
-              v-for="item in docList"
-              :key="item.id"
-              :label="item.docName"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="病情描述" prop="desc">
-          <el-input
-            type="textarea"
-            v-model="addRecordForm.desc"
-            placeholder="包括现在的症状以及既往史"
-          />
-        </el-form-item>
+        <el-row :gutter="30">
+          <el-col :span="12">
+            <el-form-item label="患者姓名">
+              <el-input v-model="patientInfoForm.name" placeholder="请输入姓名" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="年龄">
+              <el-input type="number" v-model="patientInfoForm.age" placeholder="请输入年龄" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别">
+              <el-switch 
+                v-model="userInfo.sex"
+                active-color="#a8824a"
+                inactive-color=""
+                active-value="0"
+                active-text="男"
+                inactive-value="1"
+                inactive-text="女"
+                disabled
+              >
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号">
+              <el-input v-model="userInfo.phone" placeholder="请输入手机号" clearable disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="既往史">
+              <el-input type="textarea" v-model="patientInfoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="过敏史">
+              <el-input type="textarea" v-model="patientInfoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" disabled/>
+            </el-form-item>
+            </el-col>
+          <el-col :span="24">
+            <el-form-item label="生活习惯">
+              <el-input type="textarea" v-model="patientInfoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item prop="doctorId" label="选择医生">
+              <el-select
+                v-model="cityName"
+                clearable
+                placeholder="请选择地区"
+                style="margin-right: 10px"
+                @change="updateHospitalList"
+              >
+                <el-option
+                  v-for="item in cities"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-select
+                v-model="hospitalName"
+                clearable
+                placeholder="请选择医院"
+                style="margin-right: 10px"
+                @change="updateDepartmentList"
+              >
+                <el-option
+                  v-for="item in hospitalList"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-select
+                v-model="departmentName"
+                clearable
+                placeholder="请选择科室"
+                style="margin-right: 10px"
+                @change="updateDoctorList"
+              >
+                <el-option
+                  v-for="item in departmentList"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-select
+                v-model="recordInfoForm.doctorId"
+                clearable
+                placeholder="请选择医生"
+              >
+                <el-option
+                  v-for="item in docList"
+                  :key="item.doctorId"
+                  :label="item.name"
+                  :value="item.doctorId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="病情描述" prop="description">
+              <el-input type="textarea" v-model="recordInfoForm.description" placeholder="包括现在的症状以及既往史" />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <!-- <el-form-item
           label="病症图片(包括面部，舌苔图片最多三张)"
@@ -110,64 +141,133 @@
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item> -->
-
-        <el-form-item>
-          <el-button type="primary" @click="addRecord">提交病历</el-button>
-          <el-button @click="resetForm">取消</el-button>
-        </el-form-item>
       </el-form>
+      <div class="btns">
+        <el-button type="primary" @click="addRecord">提交病历</el-button>
+        <el-button @click="resetForm">取消</el-button>
+      </div>
     </el-card>
   </div>
 </template>
 
 <script>
-import cities from "@/assets/data/cities.js";
+import { getPatientInfo } from "@/api/patient";
+import { getDoctorList } from "@/api/doctor";
+import { addRecord } from "@/api/record";
 export default {
   components: {},
   data() {
     return {
-      userId: "",
-      addRecordForm: {
-        name: "",
-        age: "",
-        city: "",
-        hospital: "",
-        department: "",
-        docId: "",
-        desc: "",
-        picImg: "",
+      patientInfoForm: {},
+      recordInfoForm: {
+        doctorId: '',
+        description: '',
       },
       addRecordRules: {
-        name: [
-          { required: true, message: "患者姓名不能为空", trigger: "change" },
+        doctorId: [
+          { required: true, message: "请选择一个医生", trigger: "blur" },
         ],
-        age: [{ required: true, message: "年龄不能为空", trigger: "change" }],
-        docId: [
-          { required: true, message: "请选择一个医生", trigger: "change" },
-        ],
-        desc: [
+        description: [
           { required: true, message: "病症描述不能为空", trigger: "blur" },
         ],
       },
       cities: [],
       hospitalList: [],
       departmentList: [],
+      cityName: '',
+      hospitalName: '',
+      departmentName: '',
       docList: [],
+      allDoctors: []
     };
   },
-  mounted() {
-    this.cities = cities;
-    // this.userId = JSON.parse(localStorage.getItem("userInfo")).id;
+
+  computed: {
+    userInfo() {
+      return this.$store.state.user.userInfo;
+    }
   },
+  async mounted() {
+    this.$bus.$on('user-info-updated', async () => {
+      this.patientInfoForm = await getPatientInfo(this.userInfo.userId); // 当用户信息更新时，重新加载数据
+    });
+    this.patientInfoForm = await getPatientInfo(this.userInfo.userId);
+    this.allDoctors = await getDoctorList();
+    this.cities = [...new Set(this.allDoctors.map(doctor => doctor.cityName))].map(city => ({
+      label: city,
+      value: city
+    }));
+    this.updateHospitalList()
+  },
+
+  beforeDestroy() {
+    // 组件销毁时，移除事件监听
+    this.$bus.$off('user-info-updated');
+  },
+
   methods: {
     addRecord() {
-      this.$refs.addRecordFormRef.validate((valid) => {
+      this.$refs.recordInfoFormRef.validate(async (valid) => {
         if (valid) {
+          const result = await addRecord({...this.patientInfoForm, ...this.recordInfoForm})
+          if (result) {
+            this.$message.success("病历创建成功");
+          }
+          
         }
       });
     },
     resetForm() {
-      this.$refs.addRecordFormRef.resetFields();
+      this.$refs.recordInfoFormRef.resetFields();
+    },
+
+    updateHospitalList() {
+      if (!this.cityName) {
+        this.hospitalList = [];
+        this.hospitalName = '';
+        this.updateDepartmentList();
+        return;
+      }
+      const hospitals = this.allDoctors
+        .filter(doctor => doctor.cityName === this.cityName)
+        .map(doctor => doctor.hospitalName);
+      this.hospitalList = [...new Set(hospitals)].map(hospital => ({
+        label: hospital,
+        value: hospital
+      }));
+      this.hospitalName = ''; // 重置医院选择
+      this.updateDepartmentList();
+    },
+    updateDepartmentList() {
+      if (!this.hospitalName) {
+        this.departmentList = [];
+        this.departmentName = '';
+        this.updateDoctorList();
+        return;
+      }
+      const departments = this.allDoctors
+        .filter(doctor => doctor.hospitalName === this.hospitalName)
+        .map(doctor => doctor.departmentName);
+      this.departmentList = [...new Set(departments)].map(department => ({
+        label: department,
+        value: department
+      }));
+      this.departmentName = ''; // 重置科室选择
+      this.updateDoctorList();
+    },
+    updateDoctorList() {
+      if (!this.departmentName) {
+        this.docList = [];
+        this.recordInfoForm.doctorId = '';
+        return;
+      }
+      this.docList = this.allDoctors
+        .filter(doctor => doctor.departmentName === this.departmentName)
+        .map(doctor => ({
+          name: doctor.name,
+          doctorId: doctor.doctorId
+        }));
+      this.recordInfoForm.doctorId = ''; // 重置医生选择
     },
   },
 };
@@ -179,6 +279,12 @@ export default {
   content: "";
 }
 .clearfix:after {
-  clear: both
+  clear: both;
+}
+
+.btns {
+  display: flex;
+  justify-content: end;
+  gap: 30px;
 }
 </style>

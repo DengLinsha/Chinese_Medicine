@@ -16,3 +16,10 @@ export function getDoctorInfo(userId) {
     method: 'get',
   })
 }
+
+export function getDoctorList() {
+  return request({
+    url: `/doctor`,
+    method: 'get',
+  })
+}

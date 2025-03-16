@@ -8,8 +8,6 @@ import com.me.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +18,9 @@ public class UserController {
     private UserService userService;
 
     // get请求
-    @GetMapping("/{id}")
-    public Result query(@PathVariable(value="id")Integer id) {
-        User user = userService.queryById(id);
+    @GetMapping("/{userId}")
+    public Result query(@PathVariable Integer userId) {
+        User user = userService.queryById(userId);
         return Result.success(user);
     }
 
@@ -77,16 +75,39 @@ public class UserController {
         }
     }
 
-    // 更新密码
-    @PostMapping("/updatePassword")
-    public Result updatePassword(@RequestBody Map<String, String> passwordData) {
-        String identity = passwordData.get("identity");
-        String password = PasswordUtil.desEncrypt(passwordData.get("password"));
-        boolean success = userService.updatePassword(identity, password);
-        if (success) {
+//    // 更新密码
+//    @PostMapping("/updatePassword")
+//    public Result updatePassword(@RequestBody Map<String, String> passwordData) {
+//        String identity = passwordData.get("identity");
+//        String password = PasswordUtil.desEncrypt(passwordData.get("password"));
+//        boolean success = userService.updatePassword(identity, password);
+//        if (success) {
+//            return Result.success(true);
+//        } else {
+//            return Result.error("更新密码失败");
+//        }
+//    }
+
+    // 更新信息
+    @PostMapping("/update")
+    public Result update(@RequestBody Map<String, String> user) {
+        try {
+            Integer userId = Integer.parseInt(user.get("userId"));
+            String username = user.get("username");
+            String phone = user.get("phone");
+            String email = user.get("email");
+            String oldPassword = PasswordUtil.desEncrypt(user.get("oldPassword"));
+            String newPassword = PasswordUtil.desEncrypt(user.get("newPassword"));
+            userService.update(userId, username, phone, email);
+
+            // 更新密码（如果提供了新密码）
+            if (newPassword != null && !newPassword.isEmpty()) {
+                userService.updateUserPassword(userId, oldPassword, newPassword);
+            }
             return Result.success(true);
-        } else {
-            return Result.error("更新密码失败");
+
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
         }
     }
 }

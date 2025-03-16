@@ -6,6 +6,8 @@ import com.me.herb.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value="/doctor")
 public class DoctorController {
@@ -38,5 +40,11 @@ public class DoctorController {
         } catch (Exception e) {
             return Result.error("查询失败，请稍后再试");
         }
+    }
+
+    @GetMapping
+    public Result queryAll() {
+        List<Doctor> doctor = doctorService.queryAll();
+        return Result.success(doctor);
     }
 }

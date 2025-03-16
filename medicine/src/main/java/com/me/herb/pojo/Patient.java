@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Patient {
-    private Integer patientId;
     private Integer userId;
+
+    private Integer patientId;
     private String name;
     private Integer sex;
     private Integer age;

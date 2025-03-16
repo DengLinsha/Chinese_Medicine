@@ -16,8 +16,12 @@
                 introduction = VALUES(introduction)
     </update>
 
-    <!-- 根据 userId 查询患者信息 -->
+    <!-- 根据 userId 查询医生信息 -->
     <select id="getDoctorByUserId" parameterType="int" resultType="Doctor">
-        SELECT * FROM doctor WHERE userId = #{userId}
+        SELECT * from doctor WHERE userId = #{userId}
+    </select>
+
+    <select id="queryAll" resultType="Doctor">
+        select * from doctor;
     </select>
 </mapper>

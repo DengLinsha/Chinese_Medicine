@@ -21,18 +21,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Integer id) {
-        userMapper.delete(id);
+    public void delete(Integer userId) {
+        userMapper.delete(userId);
     }
 
     @Override
-    public void update(User user) {
+    public void update(Integer userId, String username, String phone, String email) {
+        User user = new User();
+        user.setUserId(userId);
+        user.setUsername(username);
+        user.setPhone(phone);
+        user.setEmail(email);
         userMapper.update(user);
     }
 
     @Override
-    public User queryById(Integer id) {
-        return userMapper.queryById(id);
+    public User queryById(Integer userId) {
+        return userMapper.queryById(userId);
     }
 
     @Override
@@ -52,13 +57,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updatePassword(String identity, String password) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("identity", identity);
-        params.put("password", password);
-
-        int result = userMapper.updateUserPassword(params);
-        return result > 0;
+    public void updateUserPassword(Integer userId, String oldPassword, String newPassword) {
+        User user = userMapper.queryById(userId);
+        user = userMapper.findUserByIdentity(user.getUsername());
+        System.out.println(user);
+        if (!user.getPassword().equals(oldPassword)) {
+            throw new RuntimeException("原密码错误");
+        }
+        userMapper.updateUserPassword(userId, newPassword);
     }
 
 }

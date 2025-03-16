@@ -12,30 +12,31 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    redirect:"/home/addRecord",
     component: () => import('@/views/home/index.vue'),
     children: [
       {
-        path:"/addRecord",
+        path:"/home/addRecord",
         name:"addRecord",
         component: () => import('@/views/medicalRecord/addRecord.vue')
       },
       {
-        path:"/recordDetail",
+        path:"/home/recordDetail",
         name:"recordDetail",
         component: () => import('@/views/medicalRecord/recordDetail.vue')
       },
       {
-        path:"/allRecords",
+        path:"/home/allRecords",
         name:"allRecords",
         component: () => import('@/views/medicalRecord/allRecords.vue')
       },
       {
-        path:"/docList",
+        path:"/home/docList",
         name:"docList",
         component: () => import('@/views/medicalRecord/docList.vue')
       },
       {
-        path:"/diagnosisList",
+        path:"/home/diagnosisList",
         name:"diagnosisList",
         component: () => import('@/views/diagnosis/diagnosisList.vue'),
       },

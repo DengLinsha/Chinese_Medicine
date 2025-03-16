@@ -19,7 +19,7 @@ public interface UserMapper {
     void update(User user);
 
     // 根据id查找用户
-    User queryById(Integer id);
+    User queryById(Integer userId);
 
     // 查询全部用户信息
     List<User> queryAll();
@@ -31,5 +31,5 @@ public interface UserMapper {
     User findUserByIdentityAndPassword(@Param("identity") String identity, @Param("password") String password);
 
     // 修改密码
-    int updateUserPassword(Map<String, Object> params);
+    int updateUserPassword(@Param("userId") Integer userId, @Param("newPassword") String newPassword);
 }

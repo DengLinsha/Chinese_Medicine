@@ -19,10 +19,10 @@
     </select>
 
     <!-- 通过用户名、手机号、邮箱修改密码 -->
-    <update id="updateUserPassword" parameterType="map">
+    <update id="updateUserPassword" >
         UPDATE medicine.user
-        SET password = #{password}
-        WHERE (username = #{identity} OR phone = #{identity} OR email = #{identity})
+        SET password = #{newPassword}
+        WHERE userId = #{userId}
     </update>
 
     <insert id="add" parameterType="User">
@@ -31,16 +31,16 @@
     </insert>
 
     <delete id="delete" parameterType="Integer">
-        delete from medicine.user where id = #{id};
+        delete from medicine.user where userId=#{userId};
     </delete>
 
     <update id="update" parameterType="User">
-        update medicine.user set username=#{username},password=#{password}
-        where id=#{id};
+        update medicine.user set username=#{username}, phone=#{phone},email=#{email}
+        where userId=#{userId};
     </update>
 
     <select id="queryById" parameterType="Integer" resultType="User">
-        select * from medicine.user where id=#{id};
+        select userId, username, phone, email, role from medicine.user where userId=#{userId};
     </select>
 
     <select id="queryAll" resultType="User">

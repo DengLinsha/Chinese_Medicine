@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getUserInfo(userId) {
+  return request({
+    url: `/user/${userId}`,
+    method: 'get',
+  })
+}
+
 // 登录
 export function login(data) {
   return request({
@@ -17,10 +24,10 @@ export function findPassword(identity) {
   })
 }
 
-// 更新密码
-export function updatePassword(data) {
+// 更新
+export function update(data) {
   return request({
-    url: '/user/updatePassword',
+    url: '/user/update',
     method: 'post',
     data
   })

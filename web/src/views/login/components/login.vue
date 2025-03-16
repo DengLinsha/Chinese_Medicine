@@ -78,9 +78,7 @@ export default {
             login({...this.ruleForm, password}).then(res => {
               if (res) {
                 res.password = Encrypt(res.password)
-                console.log(res.password);
-                
-                localStorage.setItem('userInfo', JSON.stringify(res))
+                this.$store.dispatch('setUserInfo', res);
                 // 登录成功跳转到主页
                 this.$message.success("欢迎回来")
                 this.$router.push({path: '/home'})

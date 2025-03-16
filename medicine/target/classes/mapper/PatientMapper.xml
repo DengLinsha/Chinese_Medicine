@@ -19,6 +19,6 @@
 
     <!-- 根据 userId 查询患者信息 -->
     <select id="getPatientByUserId" parameterType="int" resultType="Patient">
-        SELECT * FROM patient WHERE userId = #{userId}
+        SELECT * from patient WHERE userId = #{userId}
     </select>
 </mapper>

@@ -12,10 +12,10 @@ public interface UserService {
     void delete(Integer id);
 
     // 修改用户信息
-    void update(User user);
+    void update(Integer userId, String username, String phone, String email);
 
     // 根据用户名/手机号/邮箱查找用户
-    User queryById(Integer id);
+    User queryById(Integer userId);
 
     // 查询全部用户信息
     List<User> queryAll();
@@ -28,5 +28,5 @@ public interface UserService {
     User getUserByIdentity(String identity);
 
     // 修改密码
-    boolean updatePassword(String identity, String password);
+    void updateUserPassword(Integer userId, String oldPassword, String newPassword);
 }

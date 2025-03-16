@@ -2,12 +2,6 @@
   <div style="width: 100%; height: 100%;">
     <el-container style="height: 100%">
       <el-header class="flex-align-center">
-        <el-button type="text" @click="isOpen"
-          ><i
-            style="font-size: 18px; color: white"
-            class="el-icon-s-operation"
-          ></i
-        ></el-button>
         <h2 style="color: white; margin-left: 20px; width: 96%;">中医在线诊断平台</h2>
         <el-dropdown trigger="click">
           <span class="el-dropdown-link">
@@ -19,8 +13,8 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-user-solid">{{ userInfo.username }}</el-dropdown-item>
             <hr />
-            <el-dropdown-item icon="el-icon-key" @click.native="updatePasswordVisible = true">修改密码</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-message" @click.native="updateInfoVisible = true">编辑信息</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-edit" @click.native="userInfoVisible = true">基础信息</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-message" @click.native="updateInfoVisible = true">详细信息</el-dropdown-item>
             <!-- <el-dropdown-item
               icon="el-icon-upload"
               @click.native="uploadVisible = true"
@@ -35,22 +29,22 @@
         </el-dropdown>
       </el-header>
       <el-container>
-        <el-aside :width="width">
-          <el-menu style="height: 100%" :collapse="isCollapse" router>
-            <el-menu-item index="/addRecord">
+        <el-aside width="135px">
+          <el-menu :default-active="defaultActive" style="height: 100%" router>
+            <el-menu-item index="/home/addRecord">
               <i class="el-icon-service"></i>
               <span slot="title">病症诊断</span>
             </el-menu-item>
-            <el-menu-item index="/allRecords">
+            <el-menu-item index="/home/allRecords">
               <i class="el-icon-document"></i>
               <span slot="title">咨询列表</span>
             </el-menu-item>
-            <el-menu-item index="/docList">
+            <el-menu-item index="/home/docList">
               <i class="el-icon-user"></i>
               <span slot="title">医师列表</span>
             </el-menu-item>
             <!-- 医生 -->
-            <el-menu-item index="/diagnosisList">
+            <el-menu-item index="/home/diagnosisList">
               <i class="el-icon-user"></i>
               <span slot="title">诊断列表</span>
             </el-menu-item>
@@ -62,47 +56,68 @@
       </el-container>
     </el-container>
 
-    <!-- 修改密码 -->
-    <el-dialog title="修改密码" width=30% :visible.sync="updatePasswordVisible" style="text-align:center;">
-      <el-form :model="passwordForm" :rules="passwordRule" ref="passwordFormRef">
-        <el-form-item label="原密码" prop="oldpassword">
-          <el-input v-model="passwordForm.oldpassword" placeholder="请输入原密码" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="新密码" prop="newpassword">
-          <el-input v-model="passwordForm.newpassword" placeholder="请输入新密码" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="reset('passwordFormRef')">取 消</el-button>
-        <el-button type="primary" @click="updatePassword">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 修改患者个人信息 -->
-    <el-dialog v-if="userInfo.role === 0" title="修改个人信息" width=65% :visible.sync="updateInfoVisible">
-      <el-form :model="patientInfoForm" :rules="patientInfoRule" ref="patientInfoFormRef" label-width="80px">
+    <!-- 修改基础信息 -->
+    <el-dialog title="修改基础信息" width=65% :visible.sync="userInfoVisible">
+      <el-form :model="userInfo" :rules="userInfoRule" ref="userInfoRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
             <el-form-item label="用户名">
-              <el-input v-model="patientInfoForm.username" disabled></el-input>
+              <el-input v-model="userInfo.username" placeholder="请输入手机号" clearable ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="patientInfoForm.name" placeholder="请输入姓名" clearable></el-input>
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="userInfo.phone" placeholder="请输入手机号" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色" prop="role">
-              <el-radio-group v-model="patientInfoForm.role" disabled>
+              <el-radio-group v-model="userInfo.role" disabled>
                 <el-radio :label="0">患者</el-radio>
                 <el-radio :label="1">医师</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="userInfo.email" placeholder="请输入邮箱" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="原密码" prop="oldPassword">
+              <el-input v-model="userInfo.oldPassword" type="password" placeholder="请输入原密码" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="新密码" prop="newPassword">
+              <el-input v-model="userInfo.newPassword" type="password" placeholder="请输入新密码" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="reset('userInfoRef')">取 消</el-button>
+        <el-button type="primary" @click="updateBasicInfo">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 修改患者个人信息 -->
+    <el-dialog v-if="userInfo.role === 0" title="修改患者信息" width=65% :visible.sync="updateInfoVisible">
+      <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
+        <el-row :gutter="30">
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="infoForm.name" placeholder="请输入姓名" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="年龄" prop="age">
+              <el-input v-model="infoForm.age" placeholder="请输入年龄" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="性别" prop="sex">
               <el-switch 
-                v-model="patientInfoForm.sex"
+                v-model="infoForm.sex"
                 active-color="#a8824a"
                 inactive-color=""
                 active-value="0"
@@ -113,58 +128,40 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="年龄" prop="age">
-              <el-input v-model="patientInfoForm.age" placeholder="请输入年龄" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="既往史">
-              <el-input type="textarea" v-model="patientInfoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" ></el-input>
+              <el-input type="textarea" v-model="infoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="过敏史">
-              <el-input type="textarea" v-model="patientInfoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" ></el-input>
+              <el-input type="textarea" v-model="infoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="生活习惯">
-              <el-input type="textarea" v-model="patientInfoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" ></el-input>
+              <el-input type="textarea" v-model="infoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="reset('patientInfoFormRef')">取 消</el-button>
+        <el-button @click="reset('infoFormRef')">取 消</el-button>
         <el-button type="primary" @click="updatePatientInfo">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 修改医生个人信息 -->
-    <el-dialog v-if="userInfo.role === 1" title="修改个人信息" width=65% :visible.sync="updateInfoVisible">
-      <el-form :model="doctorInfoForm" :rules="doctorInfoRule" ref="doctorInfoFormRef" label-width="80px">
+    <el-dialog v-if="userInfo.role === 1" title="修改医生信息" width=65% :visible.sync="updateInfoVisible">
+      <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
-            <el-form-item label="用户名">
-              <el-input v-model="doctorInfoForm.username" disabled></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="姓名" prop="name">
-              <el-input v-model="doctorInfoForm.name" placeholder="请输入姓名" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色" prop="role">
-              <el-radio-group v-model="doctorInfoForm.role" disabled>
-                <el-radio :label="0">患者</el-radio>
-                <el-radio :label="1">医师</el-radio>
-              </el-radio-group>
+              <el-input v-model="infoForm.name" placeholder="请输入姓名" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="所在地区">
               <el-select
-                v-model="doctorInfoForm.cityName"
+                v-model="infoForm.cityName"
                 clearable
                 placeholder="请选择地区"
                 style="width: 100%"
@@ -181,23 +178,23 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="所在医院">
-              <el-input v-model="doctorInfoForm.hospitalName" placeholder="请输入所在医院" clearable></el-input>
+              <el-input v-model="infoForm.hospitalName" placeholder="请输入所在医院" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="所在科室">
-              <el-input v-model="doctorInfoForm.departmentName" placeholder="请输入所在科室" clearable></el-input>
+              <el-input v-model="infoForm.departmentName" placeholder="请输入所在科室" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="个人简介">
-              <el-input type="textarea" v-model="doctorInfoForm.introduction" placeholder="请输入个人简介" ></el-input>
+              <el-input type="textarea" v-model="infoForm.introduction" placeholder="请输入个人简介" ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="reset('doctorInfoFormRef')">取 消</el-button>
+        <el-button @click="reset('infoFormRef')">取 消</el-button>
         <el-button type="primary" @click="updateDoctorInfo">确 定</el-button>
       </div>
     </el-dialog>
@@ -205,7 +202,7 @@
 </template>
 
 <script>
-import { updatePassword } from "@/api/user";
+import { update } from "@/api/user";
 import { Encrypt } from "@/utils/secret";
 import cities from "@/assets/data/cities.js";
 import { updatePatientInfo, getPatientInfo } from "@/api/patient"
@@ -214,25 +211,35 @@ export default {
   components: {},
   data() {
     return {
-      userInfo: JSON.parse(localStorage.getItem('userInfo')),
-      width: "200px",
-      isCollapse: false,
-      updatePasswordVisible: false,
+      defaultActive: this.$route.path,
+      userInfoVisible: false,
       updateInfoVisible: false,
-      passwordForm:{
-        oldpassword:'',
-        newpassword:''
-      },
-      passwordRule:{
-        oldpassword:[
+      userInfoRule:{
+        oldPassword:[
           { required: true, message: '请输入原密码', trigger: 'blur' },
         ],
-        newpassword:[
+        newPassword:[
           { required: true, message: '请输入新密码', trigger: 'blur' },
-        ]
+        ],
+        phone: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          {
+            pattern: /^1[3-9]\d{9}$/,
+            message: "请输入有效的电话号码！",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: "blur",
+          },
+        ],
       },
-      patientInfoForm: {},
-      patientInfoRule: {
+      infoForm: {},
+      infoRule: {
         name:[
           { required: true, message: '请输入姓名', trigger: 'blur' },
         ],
@@ -244,77 +251,59 @@ export default {
         ],
       },
       cities: [],
-      doctorInfoForm: {},
-      doctorInfoRule: {
-        name:[
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-        ],
-      }
     };
   },
 
-  watch: {
-  updateInfoVisible(newVal) {
-    if (newVal) {
-      if (this.userInfo.role === 0) {
-        this.getPatientInfo();
-      } else {
-        this.getDoctorInfo();
-      }
-      
+  computed: {
+    userInfo() {
+      return this.$store.state.user.userInfo;
     }
-  }
-},
-  mounted() {
+  },
+
+  watch: {
+    async updateInfoVisible(newVal) {
+      if (newVal) {
+        if (this.userInfo.role === 0) {
+          this.infoForm = await getPatientInfo(this.userInfo.userId)
+        } else {
+          this.infoForm = await getDoctorInfo(this.userInfo.userId)
+        }
+      }
+    }
+  },
+  
+  async mounted() {
     this.cities = cities
   },
   methods: {
-    isOpen() {
-      if (this.isCollapse) {
-        this.width = "200px";
-      } else {
-        this.width = "65px";
-      }
-      this.isCollapse = !this.isCollapse;
-    },
-
     reset(formName){
       this.$refs[formName].resetFields();
-      if (formName === 'passwordFormRef') {
-        this.updatePasswordVisible=false;
+      if (formName === 'userInfoRef') {
+        this.userInfoVisible=false;
       } else {
         this.updateInfoVisible=false;
       }
     },
 
-    async updatePassword() {
-      const password = Encrypt(this.passwordForm.newpassword);
-      await updatePassword({identity: this.userInfo.username, password});
-      this.reset('passwordFormRef');
-    },
-
-    async getPatientInfo() {
-      this.patientInfoForm = await getPatientInfo(this.userInfo.userId)
-      this.patientInfoForm.userId = this.userInfo.userId
-      this.patientInfoForm.username = this.userInfo.username
-      this.patientInfoForm.role = this.userInfo.role
-    },
-
-    async getDoctorInfo() {
-      this.doctorInfoForm = await getDoctorInfo(this.userInfo.userId)
-      this.doctorInfoForm.userId = this.userInfo.userId
-      this.doctorInfoForm.username = this.userInfo.username
-      this.doctorInfoForm.role = this.userInfo.role
+    async updateBasicInfo() {
+      const oldPassword = Encrypt(this.userInfo.oldPassword)
+      const newPassword = Encrypt(this.userInfo.newPassword)
+      const res = await update({...this.userInfo, oldPassword, newPassword})
+      if (res) {
+        this.$message.success("修改成功")
+        this.updateBasicInfoVisible = false
+      }
     },
 
     updatePatientInfo() {
-      this.$refs.patientInfoFormRef.validate(async (valid) => {
+      this.$refs.infoFormRef.validate(async (valid) => {
         if (valid) {
           try {
-            const res = await updatePatientInfo(this.patientInfoForm)
+            const res = await updatePatientInfo(this.infoForm)
             if (res) {
               this.$message.success("修改成功")
               this.updateInfoVisible = false;
+              this.$bus.$emit('user-info-updated');
             }
           } catch (error) {
             console.log(error);
@@ -325,10 +314,10 @@ export default {
     },
 
     updateDoctorInfo() {
-      this.$refs.doctorInfoFormRef.validate(async (valid) => {
+      this.$refs.infoFormRef.validate(async (valid) => {
         if (valid) {
           try {
-            const res = await updateDoctorInfo(this.doctorInfoForm)
+            const res = await updateDoctorInfo(this.infoForm)
             if (res) {
               this.$message.success("修改成功")
               this.updateInfoVisible = false;
@@ -348,7 +337,7 @@ export default {
         type: 'warning'
       }).then(() => {
         // 清空localStorage
-        localStorage.clear();
+        this.$store.dispatch('clearUserInfo');
         this.$router.push({path: '/'})
         this.$message({
           type: 'success',
@@ -374,5 +363,7 @@ export default {
   width: 200px;
 }
 
-
+.aside-container {
+  transition: width 0.3s ease; /* 添加宽度变化的过渡效果 */
+}
 </style>

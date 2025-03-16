@@ -1,13 +1,15 @@
 const userStore = {
   state: {
-    userInfo: null,
+    userInfo: JSON.parse(localStorage.getItem("userInfo")) || null,
   },
   mutations: {
     SET_USERINFO(state, userInfo) {
       state.userInfo = userInfo; // 设置用户信息
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
     },
     CLEAR_USERINFO(state) {
       state.userInfo = null; // 清除用户信息
+      localStorage.removeItem("userInfo");
     },
   },
   actions: {
