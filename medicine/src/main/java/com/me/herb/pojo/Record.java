@@ -14,4 +14,16 @@ public class Record {
     private String description;
     private String tongue;
     private Integer status;
+    private String patientName;
+    private String phone;
+    private Integer sex;
+    private Integer age;
+    private String oldHistory;
+    private String allergiesHistory;
+    private String habits;
+    private String doctorName;
+    private String hospitalName;
+    private String departmentName;
+    private Diagnostic diagnostic;
+    private Float score;
 }

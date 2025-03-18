@@ -6,10 +6,10 @@
 <mapper namespace="com.me.herb.mapper.PatientMapper">
     <!-- 更新患者信息 -->
     <update id="updatePatientInfo" parameterType="Patient">
-        INSERT INTO patient (userId, name, sex, age, oldHistory, allergiesHistory, habits)
-        VALUES (#{userId}, #{name}, #{sex}, #{age}, #{oldHistory}, #{allergiesHistory}, #{habits})
+        INSERT INTO patient (userId, patientName, sex, age, oldHistory, allergiesHistory, habits)
+        VALUES (#{userId}, #{patientName}, #{sex}, #{age}, #{oldHistory}, #{allergiesHistory}, #{habits})
             ON DUPLICATE KEY UPDATE
-                 name = VALUES(name),
+                 patientName = VALUES(patientName),
                  sex = VALUES(sex),
                  age = VALUES(age),
                  oldHistory = VALUES(oldHistory),

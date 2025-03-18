@@ -81,7 +81,12 @@ export default {
                 this.$store.dispatch('setUserInfo', res);
                 // 登录成功跳转到主页
                 this.$message.success("欢迎回来")
-                this.$router.push({path: '/home'})
+                if (this.$store.state.user.userInfo.role === 0) {
+                  this.$router.push({path: '/home'})
+                } else {
+                  this.$router.push({path: '/home/diagnosisList'})
+                }
+                
               }
             })
           } finally {

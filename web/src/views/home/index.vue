@@ -31,22 +31,13 @@
       <el-container>
         <el-aside width="135px">
           <el-menu :default-active="defaultActive" style="height: 100%" router>
-            <el-menu-item index="/home/addRecord">
-              <i class="el-icon-service"></i>
-              <span slot="title">病症诊断</span>
-            </el-menu-item>
-            <el-menu-item index="/home/allRecords">
-              <i class="el-icon-document"></i>
-              <span slot="title">咨询列表</span>
-            </el-menu-item>
-            <el-menu-item index="/home/docList">
-              <i class="el-icon-user"></i>
-              <span slot="title">医师列表</span>
-            </el-menu-item>
-            <!-- 医生 -->
-            <el-menu-item index="/home/diagnosisList">
-              <i class="el-icon-user"></i>
-              <span slot="title">诊断列表</span>
+            <el-menu-item
+              v-for="item in allowedRoutes"
+              :key="item.path"
+              :index="item.path"
+            >
+              <i :class="item.icon"></i>
+              <span slot="title">{{ item.name }}</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -105,8 +96,8 @@
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="infoForm.name" placeholder="请输入姓名" clearable></el-input>
+            <el-form-item label="姓名" prop="patientName">
+              <el-input v-model="infoForm.patientName" placeholder="请输入姓名" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -154,8 +145,8 @@
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="infoForm.name" placeholder="请输入姓名" clearable></el-input>
+            <el-form-item label="姓名" prop="doctorName">
+              <el-input v-model="infoForm.doctorName" placeholder="请输入姓名" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -240,7 +231,10 @@ export default {
       },
       infoForm: {},
       infoRule: {
-        name:[
+        patientName:[
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+        ],
+        doctorName:[
           { required: true, message: '请输入姓名', trigger: 'blur' },
         ],
         sex:[
@@ -257,7 +251,14 @@ export default {
   computed: {
     userInfo() {
       return this.$store.state.user.userInfo;
-    }
+    },
+    allowedRoutes() {
+      return this.$router.options.routes
+        .find(route => route.path === '/home')
+        .children.filter(child => {
+          return child?.meta?.roles.includes(this.userInfo.role);
+        });
+    },
   },
 
   watch: {

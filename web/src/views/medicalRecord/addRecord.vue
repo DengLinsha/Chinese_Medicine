@@ -13,12 +13,12 @@
         <el-row :gutter="30">
           <el-col :span="12">
             <el-form-item label="患者姓名">
-              <el-input v-model="patientInfoForm.name" placeholder="请输入姓名" disabled />
+              <el-input v-model="patientInfoForm.patientName" placeholder="请输入姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="年龄">
-              <el-input type="number" v-model="patientInfoForm.age" placeholder="请输入年龄" disabled />
+              <el-input type="number" v-model="patientInfoForm.age" placeholder="请输入年龄" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -38,22 +38,22 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号">
-              <el-input v-model="userInfo.phone" placeholder="请输入手机号" clearable disabled />
+              <el-input v-model="userInfo.phone" placeholder="请输入手机号" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="既往史">
-              <el-input type="textarea" v-model="patientInfoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" disabled/>
+              <el-input type="textarea" v-model="patientInfoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="过敏史">
-              <el-input type="textarea" v-model="patientInfoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" disabled/>
+              <el-input type="textarea" v-model="patientInfoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" />
             </el-form-item>
             </el-col>
           <el-col :span="24">
             <el-form-item label="生活习惯">
-              <el-input type="textarea" v-model="patientInfoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" disabled/>
+              <el-input type="textarea" v-model="patientInfoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -185,7 +185,7 @@ export default {
   computed: {
     userInfo() {
       return this.$store.state.user.userInfo;
-    }
+    },
   },
   async mounted() {
     this.$bus.$on('user-info-updated', async () => {

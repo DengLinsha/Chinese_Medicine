@@ -4,14 +4,14 @@
       <div slot="header" class="clearfix">
         <h2>咨询列表</h2>
       </div>
-      <div v-for="item in recordList" :key="item.id">
+      <div v-for="item in recordList" :key="item.recordId">
         <el-descriptions :column="3" border style="margin-bottom: 20px">
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-user"></i>
               姓名
             </template>
-            {{ item.realName }}
+            {{ item.patientName }}
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -32,21 +32,21 @@
               <i class="el-icon-tickets"></i>
               病症详情
             </template>
-            <span class="text-ellipsis">{{ item.desc }}</span>
+            <span class="text-ellipsis">{{ item.description }}</span>
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-tickets"></i>
               所属科室
             </template>
-            {{ item.department }}
+            {{ item.departmentName }}
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-service"></i>
               诊治医生
             </template>
-            {{ item.docName }}
+            {{ item.doctorName }}
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -59,7 +59,7 @@
             <el-tag v-if="item.status == 2" size="small">已诊断</el-tag>
             <el-tag v-if="item.status == 3" size="small">诊断已结束</el-tag>
             <!-- <el-tag  @click="recordDetail(item)" style="margin-left: 10px" size="small">点击查看详情</el-tag> -->
-            <el-link style="margin-left: 10px" type="primary" @click="goRecordDetail(item)"
+            <el-link style="margin-left: 10px" type="primary" @click="goRecordDetail(item.recordId)"
               >点击查看详情</el-link
             >
           </el-descriptions-item>
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { getRecordList } from '@/api/record';
 export default {
   components: {},
   data() {
@@ -100,75 +101,16 @@ export default {
     this.handleQuery();
   },
   methods: {
-    handleQuery(params = {}) {
+    async handleQuery(params = {}) {
       this.tableParams = { ...this.tableParams, ...params };
-      this.recordList = [
-        {
-          id: 1,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 0,
-        },
-        {
-          id: 2,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-        {
-          id: 3,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-        {
-          id: 4,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-        {
-          id: 5,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-        {
-          id: 6,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-      ];
-      this.total = this.recordList.length;
+      const result = await getRecordList(this.tableParams)
+      this.recordList = result.recordList
+      this.total = result.total;
     },
-    goRecordDetail(item) {
+    goRecordDetail(recordId) {
+      localStorage.setItem('recordId', recordId)
       this.$router.push({
-        path: '/recordDetail'
+        path: '/home/recordDetail'
       })
     }
   },

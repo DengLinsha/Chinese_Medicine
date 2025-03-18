@@ -8,12 +8,12 @@
         <el-col :span="11">
           <div>
             <div class="content">
-                <div style="line-height: 40px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.realName }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.patientName }}</div>
                 <div style="line-height: 40px;"><span style="font-weight: bold;">患者年龄：</span>{{ record.age }}</div>
                 <div style="line-height: 40px;"><span style="font-weight: bold;">患者联系方式：</span>{{ record.phone }}</div>
-                <div style="line-height: 40px;"><span style="font-weight: bold;">病情自述：</span>{{ record.desc }}</div>
-                <div style="line-height: 40px;"><span style="font-weight: bold;">所属科室：</span>{{ record.department }}</div>
-                <div style="line-height: 40px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.docName }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">病情自述：</span>{{ record.description }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">所属科室：</span>{{ record.departmentName }}</div>
+                <div style="line-height: 40px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.doctorName }}</div>
             </div>
             <!-- <div class="demo-image__preview">
               <div>
@@ -47,15 +47,17 @@
           <div class="line"></div>
         </el-col>
         <el-col :span="12">
-          <div v-if="diagnosis != null" style="">
-            <div style="line-height: 40px;"><span style="font-weight: bold;">主诉：</span>{{ diagnosis.complaints }}</div>
-            <div style="line-height: 40px;"><span style="font-weight: bold;">现病史：</span>{{ diagnosis.presentHistory }}</div>
-            <div style="line-height: 40px;"><span style="font-weight: bold;">既往史：</span>{{ diagnosis.oldHistory }}</div>
-            <div style="line-height: 40px;"><span style="font-weight: bold;">诊断结果：</span>{{ diagnosis.result }}</div>
-            <div style="line-height: 40px;"><span style="font-weight: bold;">药方：</span>{{ diagnosis.prescription }}</div>
-            <div style="line-height: 40px;"><span style="font-weight: bold;">医嘱：</span>{{ diagnosis.orders }}</div>
+          <div v-if="record.diagnostic != null" style="">
+            <div style="line-height: 40px;"><span style="font-weight: bold;">主诉：</span>{{ record.description }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">既往史：</span>{{ record.oldHistory }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">过敏史：</span>{{ record.allergiesHistory }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">生活习惯：</span>{{ record.habits }}</div>
+            
+            <div style="line-height: 40px;"><span style="font-weight: bold;">诊断结果：</span>{{ record.diagnostic.result }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">药方：</span>{{ record.diagnostic.prescription }}</div>
+            <div style="line-height: 40px;"><span style="font-weight: bold;">医嘱：</span>{{ record.diagnostic.orders }}</div>
           </div>
-          <div v-if="diagnosis == null">
+          <div v-else>
             <el-empty description="医生还没诊断,请耐心等待">
               <el-button type="primary" @click="notice">点此通知医生</el-button>
             </el-empty>
@@ -170,30 +172,29 @@
 </template>
 
 <script>
+import { getRecordInfo } from '@/api/record';
 export default {
   components: {},
   data() {
     return {
-        record: {
-          realName: '张三',
-          age: 18,
-          phone: '12345678901',
-          desc: '突然身上通红，起了很多小疹子',
-          department: '皮肤科',
-          docName: '邓林莎',
-          status: 0
-        },
-        diagnosis: null,
-        show: false,
-        score: 0,
-        drawer: false,
-        commentForm: {
-          content: ''
-        },
-        commentsList: [],
+      recordId: localStorage.getItem('recordId'),
+      record: {},
+      diagnosis: null,
+      show: false,
+      score: 0,
+      drawer: false,
+      commentForm: {
+        content: ''
+      },
+      commentsList: [],
     };
   },
-  mounted() {},
+  async mounted() {
+    // const res = await recordId(this.$route.query.recordId)
+    this.record = await getRecordInfo(this.recordId)
+    console.log(this.record);
+    
+  },
   methods: {
     endDialog() {
       this.$confirm('是否结束诊断?', '提示', {

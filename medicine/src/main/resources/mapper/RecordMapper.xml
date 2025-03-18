@@ -7,8 +7,35 @@
 
     <!-- 插入病历记录 -->
     <insert id="add" parameterType="Record">
-        INSERT INTO record (patientId, doctorId, description, tongue)
-        VALUES (#{patientId}, #{doctorId}, #{description}, #{tongue})
+        INSERT INTO record (patientId, doctorId, patientName, sex, age, phone, oldHistory, allergiesHistory, habits, description, tongue)
+        VALUES (#{patientId}, #{doctorId}, #{patientName}, #{sex}, #{age}, #{phone}, #{oldHistory}, #{allergiesHistory}, #{habits}, #{description}, #{tongue})
     </insert>
 
+    <select id="queryAll" resultType="RecordDTO">
+        SELECT
+            r.recordId,
+            r.patientName,
+            r.phone,
+            r.age,
+            r.description,
+            r.status,
+            d.doctorName,
+            d.departmentName,
+            d.hospitalName
+        FROM
+            record r
+                LEFT JOIN
+            doctor d ON r.doctorId = d.doctorId
+        ORDER BY
+            r.createTime DESC
+            LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countRecordList" resultType="int">
+        SELECT COUNT(*) FROM record
+    </select>
+
+    <select id="queryRecordById" parameterType="int" resultType="Record">
+        SELECT * FROM record r LEFT JOIN doctor d ON r.doctorId = d.doctorId WHERE recordId=#{recordId}
+    </select>
 </mapper>

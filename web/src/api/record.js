@@ -7,3 +7,17 @@ export function addRecord(data) {
         data
     })
 }
+
+export function getRecordList(data) {
+    return request({
+        url: `/record?page=${data.page}&pageSize=${data.pageSize}`,
+        method: 'get',
+    })
+}
+
+export function getRecordInfo(recordId) {
+  return request({
+    url: `/record/${recordId}`,
+    method: 'get',
+  })
+}
