@@ -14,4 +14,6 @@ public interface RecordService {
     Map<String, Object> getRecordList(int page, int pageSize);
 
     Record queryRecordById(int recordId);
+
+    int update(Record record);
 }

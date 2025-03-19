@@ -44,4 +44,14 @@ public class RecordController {
         record.setDiagnostic(diagnostic);
         return Result.success(record);
     }
+
+    @PostMapping("/update")
+    public Result update(@RequestBody Record record) {
+        int i = recordService.update(record);
+        if (i > 0) {
+            return Result.success(true);
+        } else {
+            return Result.error("更新失败");
+        }
+    }
 }

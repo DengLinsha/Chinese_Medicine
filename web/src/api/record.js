@@ -21,3 +21,11 @@ export function getRecordInfo(recordId) {
     method: 'get',
   })
 }
+
+export function updateRecord(data) {
+  return request({
+    url: `/record/update`,
+    method: 'post',
+    data
+  })
+}

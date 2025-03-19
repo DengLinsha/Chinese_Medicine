@@ -77,11 +77,11 @@
       <div class="rate" v-if="show == true" style="margin-top: 10px;">
         <div>给此次治疗做出您的评价：</div>
         <el-rate
-            v-model="score"
-            show-text
-            @change="pushRateValue"
-          >
-          </el-rate>
+          v-model="score"
+          show-text
+          @change="pushRateValue"
+        >
+        </el-rate>
       </div>
     </el-card>
 
@@ -172,7 +172,7 @@
 </template>
 
 <script>
-import { getRecordInfo } from '@/api/record';
+import { getRecordInfo, updateRecord } from '@/api/record';
 export default {
   components: {},
   data() {
@@ -201,13 +201,25 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
+      }).then(async () => {
         this.$message.success("恭喜您康复!祝您身体健康!")
+        await updateRecord({
+          recordId: this.recordId,
+          status: 3
+        })
         this.show = true
       });
     },
     comment() {
       this.drawer = true;
+    },
+
+    pushRateValue() {
+
+    },
+    
+    submitComment() {
+
     }
   },
 };

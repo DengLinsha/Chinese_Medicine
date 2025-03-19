@@ -38,4 +38,8 @@
     <select id="queryRecordById" parameterType="int" resultType="Record">
         SELECT * FROM record r LEFT JOIN doctor d ON r.doctorId = d.doctorId WHERE recordId=#{recordId}
     </select>
+
+    <update id="update" parameterType="Record">
+        update record set status=#{status} where recordId=#{recordId};
+    </update>
 </mapper>

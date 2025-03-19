@@ -45,4 +45,9 @@ public class RecordServiceImpl implements RecordService {
         return recordMapper.queryRecordById(recordId);
     }
 
+    @Override
+    public int update(Record record) {
+        return recordMapper.update(record);
+    }
+
 }

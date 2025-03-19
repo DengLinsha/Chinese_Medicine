@@ -20,4 +20,7 @@ public interface RecordMapper {
 
     // 查询病历详情
     Record queryRecordById(@Param("recordId") int recordId);
+
+    // 更新病历
+    int update(Record record);
 }
