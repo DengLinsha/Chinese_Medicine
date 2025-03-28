@@ -40,6 +40,6 @@
     </select>
 
     <update id="update" parameterType="Record">
-        update record set status=#{status} where recordId=#{recordId};
+        update record set status=#{status}, score=#{score} where recordId=#{recordId};
     </update>
 </mapper>

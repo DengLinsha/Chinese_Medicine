@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,4 +28,5 @@ public class Record {
     private String departmentName;
     private Diagnostic diagnostic;
     private Float score;
+    private Date createTime;
 }

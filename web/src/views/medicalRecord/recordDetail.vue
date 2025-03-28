@@ -65,12 +65,8 @@
         </el-col>
       </el-row>
 
-      <div class="btn" v-if="record.status != 3">
-        <el-button type="primary" @click="endDialog">结束诊断</el-button>
-        <el-button @click="comment">对此诊断有疑问</el-button>
-      </div>
-
-      <div class="btn" v-if="record.status === 3">
+      <div class="btn">
+        <el-button v-if="record.status != 3" type="primary" @click="endDialog">结束诊断</el-button>
         <el-button @click="comment">对此诊断有疑问</el-button>
       </div>
 
@@ -214,8 +210,14 @@ export default {
       this.drawer = true;
     },
 
-    pushRateValue() {
-
+    async pushRateValue() {
+      await updateRecord({
+        recordId: this.recordId,
+        status: this.record.status,
+        score: this.score
+      })
+      this.$message.success("感谢您的评价!")
+      this.show = false
     },
     
     submitComment() {

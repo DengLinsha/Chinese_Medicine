@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.herb.mapper.CommentMapper">
+
+    <insert id="add" parameterType="Comment">
+        INSERT INTO comment (userId, recordId, content, createdTime)
+        VALUES (#{userId}, #{recordId}, #{content}, #{createdTime})
+    </insert>
+
+    <select id="queryAll" resultType="Comment">
+        SELECT * FROM comment WHERE recordId = #{recordId}
+    </select>
+
+</mapper>

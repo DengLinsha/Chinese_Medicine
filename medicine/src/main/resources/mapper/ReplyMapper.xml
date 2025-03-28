@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.herb.mapper.ReplyMapper">
+
+    <insert id="add" parameterType="Reply">
+        INSERT INTO reply (userId, commentId, content, createdTime)
+        VALUES (#{userId}, #{commentId}, #{content}, #{createdTime})
+    </insert>
+
+    <select id="queryAll" resultType="Reply">
+        SELECT * FROM reply WHERE commentId = #{commentId}
+    </select>
+
+</mapper>
