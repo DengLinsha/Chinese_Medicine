@@ -15,6 +15,10 @@ spring:
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
+  # Hibernate 配置
+  jpa:
+    hibernate:
+      ddl-auto: update
 # 配置mybatis
 mybatis:
   #指定pojo扫描包位置让mybatis自动扫描到指定义的pojo包下

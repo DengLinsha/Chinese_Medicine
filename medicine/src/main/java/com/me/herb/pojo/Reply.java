@@ -13,6 +13,7 @@ public class Reply {
     private Integer replyId;
     private Integer commentId;
     private Integer userId;
+    private Integer role;
     private String content;
     private Date createTime;
 }

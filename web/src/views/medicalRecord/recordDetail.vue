@@ -105,7 +105,7 @@
       <el-divider></el-divider>
       <!-- 评论列表 -->
       <div v-if="commentsList.length > 0">
-        <div v-for="comment in commentsList" :key="comment.id">
+        <div v-for="comment in commentsList" :key="comment.commentId">
           <el-row :gutter="15" style="margin-left: 10px">
             <el-col :span="3">
               <!-- <div v-if="comment.role == 0">
@@ -123,39 +123,37 @@
                 ></el-avatar>
               </div> -->
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12" style="display: flex; gap: 8px;">
               <div style="font-family: Monaco">
-                {{ comment.role == 1 ? comment.docName + "医生" : comment.userName }}
+                {{ comment.role == 1 ? comment.username + "医生" : comment.username }}
               </div>
               <div style="font-size: small; color: #40c3ff">
-                {{ comment.createTime }}
+                {{ comment.createTime.split('T')[0] }}
               </div>
             </el-col>
           </el-row>
 
           <el-row>
             <el-col :span="15"
-              ><p style="margin-left: 60px; margin-top: 10px; color: #00060c">
+              ><p style="margin-left: 10px; margin-top: 10px; color: #00060c">
                 {{ comment.content }}
               </p></el-col
             >
-            <el-col :span="9" style="margin-top: -90px; margin-left: 210px">
-              <!-- 医生 -->
+            <div style="float: right; margin-top: -30px;margin-right: 15px;">
               <el-button
                 type="text"
-                v-if="comment.role == 1"
                 @click="showReply(comment)"
                 >回复</el-button
               >
-              <!-- 患者 -->
+              <!-- 只能删除自己的评论 -->
               <el-button
                 type="text"
-                v-if="comment.role == 0"
+                v-if="comment.userId == userInfo.userId"
                 style="color: #ec3418"
                 @click="deleteCommentById(comment.id)"
                 >删除</el-button
               >
-            </el-col>
+            </div>
           </el-row>
           <el-divider></el-divider>
         </div>
@@ -169,29 +167,51 @@
 
 <script>
 import { getRecordInfo, updateRecord } from '@/api/record';
+import { publishComment, getCommentList } from '@/api/comment';
+import { getUserInfo } from '@/api/user';
 export default {
   components: {},
   data() {
     return {
-      recordId: localStorage.getItem('recordId'),
+      recordId: parseInt(localStorage.getItem('recordId')),
       record: {},
       diagnosis: null,
       show: false,
       score: 0,
       drawer: false,
       commentForm: {
-        content: ''
+        recordId: '',
+        userId: '',
+        role: 0,
+        content: '',
+        username: ''
       },
       commentsList: [],
     };
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user.userInfo;
+    },
+  },
   async mounted() {
     // const res = await recordId(this.$route.query.recordId)
     this.record = await getRecordInfo(this.recordId)
-    console.log(this.record);
-    
+    this.commentForm.recordId = this.recordId
+    this.commentForm.userId = this.userInfo.userId
+    this.commentForm.role = this.userInfo.role
   },
   methods: {
+    async fetchComments() {
+      const result = await getCommentList(this.recordId);
+      this.commentsList = await Promise.all(result.map(async comment => {
+        const userInfo = await getUserInfo(comment.userId);
+        return {
+          ...comment,
+          username: userInfo.username, // 确保使用正确的属性名
+        };
+      }));
+    },
     endDialog() {
       this.$confirm('是否结束诊断?', '提示', {
         confirmButtonText: '确定',
@@ -206,7 +226,10 @@ export default {
         this.show = true
       });
     },
-    comment() {
+    async comment() {
+      await this.fetchComments()
+      console.log(this.commentsList);
+      
       this.drawer = true;
     },
 
@@ -220,8 +243,11 @@ export default {
       this.show = false
     },
     
-    submitComment() {
-
+    async submitComment() {
+      await publishComment(this.commentForm)
+      this.$message.success("发送成功!")
+      this.commentForm.content = ''
+      this.commentsList = await getCommentList(this.recordId)
     }
   },
 };

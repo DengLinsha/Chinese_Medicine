@@ -13,6 +13,7 @@ public class Comment {
     private Integer commentId;
     private Integer userId;
     private Integer recordId;
+    private Integer role;
     private String content;
     private Date createTime;
 }
