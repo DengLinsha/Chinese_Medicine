@@ -6,12 +6,15 @@
 <mapper namespace="com.me.herb.mapper.ReplyMapper">
 
     <insert id="add" parameterType="Reply">
-        INSERT INTO reply (userId, commentId, role, content)
-        VALUES (#{userId}, #{commentId}, #{role}, #{content})
+        INSERT INTO reply (userId, commentId, role, content, username, replyedName)
+        VALUES (#{userId}, #{commentId}, #{role}, #{content}, #{username}, #{replyedName})
     </insert>
 
     <select id="queryAll" resultType="Reply">
         SELECT * FROM reply WHERE commentId = #{commentId}
     </select>
 
+    <delete id="delete" parameterType="Integer">
+        delete from medicine.reply where replyId=#{replyId};
+    </delete>
 </mapper>

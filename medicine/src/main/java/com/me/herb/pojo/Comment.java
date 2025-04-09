@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,6 @@ public class Comment {
     private Integer role;
     private String content;
     private Date createTime;
+    private String username;
+    private List<Reply> replies;
 }

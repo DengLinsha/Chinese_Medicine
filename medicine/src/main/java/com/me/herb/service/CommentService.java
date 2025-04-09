@@ -8,4 +8,6 @@ public interface CommentService {
     int add(Comment comment);
 
     List<Comment> queryAll(Integer recordId);
+
+    void delete(Integer commentId);
 }

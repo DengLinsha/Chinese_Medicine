@@ -21,4 +21,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> queryAll(Integer recordId) {
         return commentMapper.queryAll(recordId);
     }
+
+    @Override
+    public void delete(Integer commentId) {
+        commentMapper.delete(commentId);
+    }
 }

@@ -21,4 +21,9 @@ public class ReplyServiceImpl implements ReplyService {
     public List<Reply> queryAll(Integer commentId) {
         return replyMapper.queryAll(commentId);
     }
+
+    @Override
+    public void delete(Integer replyId) {
+        replyMapper.delete(replyId);
+    }
 }

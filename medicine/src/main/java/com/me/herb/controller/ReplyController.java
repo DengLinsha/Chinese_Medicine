@@ -29,4 +29,10 @@ public class ReplyController {
         List<Reply> replyList = replyService.queryAll(commentId);
         return Result.success(replyList);
     }
+
+    @GetMapping("/delete/{replyId}")
+    public Result deleteReply(@PathVariable Integer replyId) {
+        replyService.delete(replyId);
+        return Result.success(true);
+    }
 }

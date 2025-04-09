@@ -16,4 +16,6 @@ public class Reply {
     private Integer role;
     private String content;
     private Date createTime;
+    private String username;
+    private String replyedName;
 }

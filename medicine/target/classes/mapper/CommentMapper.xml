@@ -6,12 +6,62 @@
 <mapper namespace="com.me.herb.mapper.CommentMapper">
 
     <insert id="add" parameterType="Comment">
-        INSERT INTO comment (userId, recordId, role, content)
-        VALUES (#{userId}, #{recordId}, #{role}, #{content})
+        INSERT INTO comment (userId, recordId, role, content, username)
+        VALUES (#{userId}, #{recordId}, #{role}, #{content}, #{username})
     </insert>
 
-    <select id="queryAll" resultType="Comment">
-        SELECT * FROM comment WHERE recordId = #{recordId}
+    <!-- 包含回复列表的完整结果映射 -->
+    <resultMap id="commentWithRepliesMap" type="com.me.herb.pojo.Comment">
+        <!-- 评论主表字段 -->
+        <id property="commentId" column="commentId"/>
+        <result property="userId" column="userId"/>
+        <result property="recordId" column="recordId"/>
+        <result property="role" column="role"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="createTime"/>
+        <result property="username" column="username"/>
+
+        <!-- 一对多关联回复 -->
+        <collection property="replies" ofType="com.me.herb.pojo.Reply">
+            <id property="replyId" column="replyId"/>
+            <result property="commentId" column="r_comment_id"/>
+            <result property="userId" column="r_user_id"/>
+            <result property="role" column="r_role"/>
+            <result property="content" column="r_content"/>
+            <result property="username" column="r_username"/>
+            <result property="replyedName" column="replyedName"/>
+            <result property="createTime" column="r_create_time"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryAll" resultMap="commentWithRepliesMap">
+        SELECT
+            c.commentId,
+            c.userId,
+            c.recordId,
+            c.role,
+            c.content,
+            c.username,
+            c.createTime,
+            r.replyId,
+            r.commentId AS r_comment_id,
+            r.userId AS r_user_id,
+            r.role AS r_role,
+            r.content AS r_content,
+            r.username AS r_username,
+            r.replyedName as replyedName,
+            r.createTime AS r_create_time
+        FROM
+            comment c
+                LEFT JOIN
+            reply r ON c.commentId = r.commentId
+        WHERE
+            c.recordId = #{recordId}
+        ORDER BY
+            c.createTime DESC, r.createTime ASC
     </select>
 
+    <delete id="delete" parameterType="Integer">
+        delete from medicine.comment where commentId=#{commentId};
+    </delete>
 </mapper>

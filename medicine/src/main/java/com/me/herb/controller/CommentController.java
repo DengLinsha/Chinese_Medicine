@@ -29,4 +29,10 @@ public class CommentController {
         List<Comment> commentList = commentService.queryAll(recordId);
         return Result.success(commentList);
     }
+
+    @GetMapping("/delete/{recordId}")
+    public Result deleteComment(@PathVariable Integer recordId) {
+        commentService.delete(recordId);
+        return Result.success(true);
+    }
 }

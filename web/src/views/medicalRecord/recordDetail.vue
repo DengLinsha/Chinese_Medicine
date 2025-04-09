@@ -96,9 +96,10 @@
           ></el-input>
           <el-button
             type="primary"
+            round
             style="float: right; margin-top: 15px; margin-right: 10px"
             @click="submitComment"
-            >提交问题</el-button
+            >评论</el-button
           >
         </el-form-item>
       </el-form>
@@ -106,55 +107,76 @@
       <!-- 评论列表 -->
       <div v-if="commentsList.length > 0">
         <div v-for="comment in commentsList" :key="comment.commentId">
-          <el-row :gutter="15" style="margin-left: 10px">
-            <el-col :span="3">
-              <!-- <div v-if="comment.role == 0">
-                <el-avatar
-                  icon="el-icon-user-solid"
-                  :src="path + comment.img"
-                  :size="40"
-                ></el-avatar>
-              </div>
-              <div v-if="comment.role == 1">
-                <el-avatar
-                  icon="el-icon-user-solid"
-                  :src="path + comment.pic"
-                  :size="40"
-                ></el-avatar>
-              </div> -->
-            </el-col>
-            <el-col :span="12" style="display: flex; gap: 8px;">
-              <div style="font-family: Monaco">
-                {{ comment.role == 1 ? comment.username + "医生" : comment.username }}
-              </div>
-              <div style="font-size: small; color: #40c3ff">
-                {{ comment.createTime.split('T')[0] }}
-              </div>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="15"
-              ><p style="margin-left: 10px; margin-top: 10px; color: #00060c">
-                {{ comment.content }}
-              </p></el-col
-            >
-            <div style="float: right; margin-top: -30px;margin-right: 15px;">
-              <el-button
-                type="text"
-                @click="showReply(comment)"
-                >回复</el-button
-              >
-              <!-- 只能删除自己的评论 -->
-              <el-button
-                type="text"
-                v-if="comment.userId == userInfo.userId"
-                style="color: #ec3418"
-                @click="deleteCommentById(comment.id)"
-                >删除</el-button
-              >
+          <div class="comment-item">
+            <div>
+              <i class="el-icon-user"></i>
+              <span style="color: #9f9f9f;margin-left: 2px;">{{ comment.role == 1 ? comment.username + "医生" : comment.username }}</span>
             </div>
-          </el-row>
+            <div style="margin-left: 16px;margin-bottom: 5px;">{{ comment.content }}</div>
+            
+            <div style="margin-left: 16px; display: flex;gap: 10px;align-items: baseline;color: #9f9f9f;">
+              <div style="font-size: 12px;">{{ comment.createTime.split('T')[0] }}</div>
+              <div style="font-size: 12px;cursor: pointer;" @click="showReply(comment)">回复</div>
+              <!-- 只能删除自己的评论 -->
+              <i v-if="comment.userId == userInfo.userId" class="el-icon-delete" style="font-size: 12px;cursor: pointer;" @click="deleteCommentById(comment)"></i>
+            </div>
+            <!-- <div v-if="replyShow" class="reply-container">
+              <el-form :model="replyForm">
+                <el-form-item>
+                  <el-input
+                    type="textarea"
+                    style="width: 95%; margin-left: 10px;"
+                    v-model="replyForm.content"
+                    :placeholder="'回复：' + replyForm.replyedName"
+                    autocomplete="off"
+                  ></el-input>
+                  <el-button
+                    type="primary"
+                    round
+                    style="float: right; margin-top: 15px; margin-right: 10px"
+                    @click="submitReply"
+                    >回复</el-button
+                  >
+                </el-form-item>
+              </el-form>
+            </div> -->
+            <!-- 显示回复 -->
+            <div v-if="comment.replies" style="margin-left: 16px;">
+              <div v-if="!comment.showAllReplies && comment.replies.length > 1">
+                <div v-for="reply in comment.replies.slice(0, 1)" :key="reply.replyId">
+                  <div>
+                    <i class="el-icon-user"></i>
+                    <span style="color: #9f9f9f;margin-left: 2px;">{{ reply.username }} 回复 {{ reply.replyedName }}</span>
+                  </div>
+                  <div style="margin-left: 16px;margin-bottom: 5px;">{{ reply.content }}</div>
+                  <div style="margin-left: 16px; display: flex;gap: 10px;align-items: baseline;color: #9f9f9f;">
+                    <div style="font-size: 12px;">{{ reply.createTime.split('T')[0] }}</div>
+                    <div style="font-size: 12px;cursor: pointer;" @click="showReply(comment)">回复</div>
+                    <!-- 只能删除自己的评论 -->
+                    <i v-if="reply.userId == userInfo.userId" class="el-icon-delete" style="font-size: 12px;cursor: pointer;" @click="deleteCommentById(reply)"></i>
+                  </div>
+                </div>
+                <div style="margin-left: 16px; font-size: 12px; cursor: pointer;" @click="toggleReplies(comment)">
+                  点击查看全部回复
+                </div>
+              </div>
+              <div v-else>
+                <div v-for="reply in comment.replies" :key="reply.replyId">
+                  <div>
+                    <i class="el-icon-user"></i>
+                    <span style="color: #9f9f9f;margin-left: 2px;">{{ reply.username }} 回复 {{ reply.replyedName }}</span>
+                  </div>
+                  <div style="margin-left: 16px;margin-bottom: 5px;">{{ reply.content }}</div>
+                  <div style="margin-left: 16px; display: flex;gap: 10px;align-items: baseline;color: #9f9f9f;">
+                    <div style="font-size: 12px;">{{ reply.createTime.split('T')[0] }}</div>
+                    <div style="font-size: 12px;cursor: pointer;" @click="showReply(comment)">回复</div>
+                    <!-- 只能删除自己的评论 -->
+                    <i v-if="reply.userId == userInfo.userId" class="el-icon-delete" style="font-size: 12px;cursor: pointer;" @click="deleteCommentById(reply)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <el-divider></el-divider>
         </div>
       </div>
@@ -162,13 +184,29 @@
         <el-empty description="暂无评论"></el-empty>
       </div>
     </el-drawer>
+    <el-dialog title="回复评论" :visible.sync="replyShow" width="30%">
+      <el-form :model="replyForm">
+          <el-form-item>
+            <el-input
+              type="textarea"
+              style="width: 95%; margin-left: 10px;"
+              v-model="replyForm.content"
+              :placeholder="'回复：' + replyForm.replyedName"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="replyShow = false">取 消</el-button>
+          <el-button type="primary" @click="submitReply">回复</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRecordInfo, updateRecord } from '@/api/record';
-import { publishComment, getCommentList } from '@/api/comment';
-import { getUserInfo } from '@/api/user';
+import { publishComment, getCommentList, replyComment, deleteComment, deleteReply } from '@/api/comment';
 export default {
   components: {},
   data() {
@@ -180,13 +218,22 @@ export default {
       score: 0,
       drawer: false,
       commentForm: {
-        recordId: '',
+        recordId: '', // 评论病历的ID
         userId: '',
         role: 0,
         content: '',
         username: ''
       },
+      replyForm: {
+        commentId: '', // 回复评论的ID
+        userId: '',
+        role: 0, // 评论的用户角色
+        content: '',
+        replyedName: '',
+        username: ''
+      },
       commentsList: [],
+      replyShow: false,
     };
   },
   computed: {
@@ -199,17 +246,19 @@ export default {
     this.record = await getRecordInfo(this.recordId)
     this.commentForm.recordId = this.recordId
     this.commentForm.userId = this.userInfo.userId
+    this.commentForm.username = this.userInfo.username
     this.commentForm.role = this.userInfo.role
+
+    this.replyForm.userId = this.userInfo.userId
+    this.replyForm.username = this.userInfo.username
+    this.replyForm.role = this.userInfo.role
   },
   methods: {
     async fetchComments() {
       const result = await getCommentList(this.recordId);
-      this.commentsList = await Promise.all(result.map(async comment => {
-        const userInfo = await getUserInfo(comment.userId);
-        return {
-          ...comment,
-          username: userInfo.username, // 确保使用正确的属性名
-        };
+      this.commentsList = result.map(comment => ({
+        ...comment,
+        showAllReplies: false // 默认不显示全部回复
       }));
     },
     endDialog() {
@@ -228,8 +277,6 @@ export default {
     },
     async comment() {
       await this.fetchComments()
-      console.log(this.commentsList);
-      
       this.drawer = true;
     },
 
@@ -247,7 +294,49 @@ export default {
       await publishComment(this.commentForm)
       this.$message.success("发送成功!")
       this.commentForm.content = ''
-      this.commentsList = await getCommentList(this.recordId)
+      await this.fetchComments()
+    },
+
+    showReply(comment) {
+      this.replyShow = !this.replyShow;
+      if (this.replyShow) {
+        this.replyForm.commentId = comment.commentId
+        this.replyForm.replyedName = comment.username
+      } else {
+        this.replyForm.commentId = ''
+        this.replyForm.replyedName = ''
+      }
+    },
+
+    async submitReply() {
+      await replyComment(this.replyForm)
+      this.$message.success("回复成功!")
+      this.replyForm.content = ''
+      this.replyForm.username = ''
+      this.replyForm.commentId = ''
+      this.replyShow = false;
+      await this.fetchComments()
+    },
+    toggleReplies(comment) {
+      comment.showAllReplies = !comment.showAllReplies;
+    },
+
+    deleteCommentById(comment) {
+      this.$confirm('是否删除该评论?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        if(comment.recordId) {
+          // 删除评论
+          await deleteComment(comment.commentId)
+        } else {
+          // 删除回复
+          await deleteReply(comment.replyId)
+        }
+        this.$message.success("删除成功!")
+        await this.fetchComments()
+      });
     }
   },
 };
@@ -266,5 +355,17 @@ export default {
   justify-content: center;
   align-items: center;
   margin-top: 30px;
+}
+
+.comment-item {
+  padding: 0 5px;
+}
+
+:deep(.el-textarea__inner) {
+  background-color: #f5f5f5;
+}
+
+.reply-container {
+  margin-top: 8px;
 }
 </style>

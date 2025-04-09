@@ -8,4 +8,6 @@ public interface ReplyService {
     int add(Reply reply);
 
     List<Reply> queryAll(Integer commentId);
+
+    void delete(Integer replyId);
 }
