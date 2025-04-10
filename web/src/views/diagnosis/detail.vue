@@ -3,16 +3,20 @@
     <div class="record-container t-borderStyle">
         <el-card style="width: 100%;">
             <div slot="header" class="clearfix">
+                <i class="el-icon-back" @click="goBack" style="cursor: pointer;margin-right: 5px;"></i>
                 <span>病历详情</span>
             </div>
             <div>
                 <div class="content">
-                    <div style="line-height: 30px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.realName }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">患者姓名：</span>{{ record.patientName }}</div>
                     <div style="line-height: 30px;"><span style="font-weight: bold;">患者年龄：</span>{{ record.age }}</div>
                     <div style="line-height: 30px;"><span style="font-weight: bold;">患者联系方式：</span>{{ record.phone }}</div>
-                    <div style="line-height: 30px;"><span style="font-weight: bold;">病情自述：</span>{{ record.desc }}</div>
-                    <div style="line-height: 30px;"><span style="font-weight: bold;">所属科室：</span>{{ record.department }}</div>
-                    <div style="line-height: 30px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.docName }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">病情自述：</span>{{ record.description }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">既往史：</span>{{ record.oldHistory || '-' }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">过敏史：</span>{{ record.allergiesHistory || '-' }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">生活习惯：</span>{{ record.habits || '-' }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">所属科室：</span>{{ record.departmentName }}</div>
+                    <div style="line-height: 30px;"><span style="font-weight: bold;">诊治医生：</span>{{ record.doctorName }}</div>
                 </div>
                 <!-- <div class="demo-image__preview">
                     <div>
@@ -48,31 +52,20 @@
             <div slot="header" class="clearfix">
                 <span>诊断结果</span>
             </div>
-            <el-form ref="diagnosisRef" :model="diagnosis" label-width="70px">
-                <el-form-item label="主诉">
-                    <el-input type="textarea" v-model="diagnosis.complaints" ></el-input>
+            <el-form ref="diagnosisRef" :model="diagnostic" label-width="80px" :rules="rules">
+                <el-form-item label="诊断结果" prop="result">
+                    <el-input type="textarea" :disabled="record.status === 3" @blur="queryRecommendList" placeholder="输入您的诊断结果" v-model="diagnostic.result" ></el-input>
                 </el-form-item>
-                <el-form-item label="现病史">
-                    <el-input type="textarea" v-model="diagnosis.presentHistory" placeholder="输入病人的现病史" ></el-input>
+                <el-form-item label="治疗方案" prop="prescription">
+                    <el-input type="textarea" :disabled="record.status === 3" v-model="diagnostic.prescription" placeholder="输入您的治疗方案" ></el-input>
                 </el-form-item>
-                <el-form-item label="既往史">
-                    <el-input type="textarea" v-model="diagnosis.oldHistory" placeholder="输入病人的既往史" ></el-input>
-                </el-form-item>
-                    <el-form-item label="诊断结果">
-                    <el-input type="textarea" @blur="queryRecommendList()" placeholder="输入您的诊断结果"  v-model="diagnosis.result" ></el-input>
-                </el-form-item>
-                <el-form-item label="治疗方案">
-                    <el-input type="textarea" v-model="diagnosis.prescription" ></el-input>
-                </el-form-item>
-                <el-form-item label="医嘱">
-                    <el-input type="textarea" v-model="diagnosis.orders" ></el-input>
+                <el-form-item label="医嘱" prop="orders">
+                    <el-input type="textarea" :disabled="record.status === 3" v-model="diagnostic.orders" placeholder="输入您的医嘱" ></el-input>
                 </el-form-item>
                 <div v-if="record.status!=3" style="display: flex;justify-content: center;gap: 20px;">
                     <el-button type="primary" @click="addDiagnosis">提交诊断</el-button>
                     <el-button type="primary" @click="reset">重置诊断</el-button>
                 </div>
-                <el-form-item v-if="record.status==3">
-                </el-form-item>
             </el-form>
         </el-card>
     </div>
@@ -103,6 +96,7 @@
 </template>
 
 <script>
+import { getRecordInfo, updateRecord } from '@/api/record';
 export default {
   components: {
 
@@ -110,19 +104,10 @@ export default {
   data () {
     return {
         record: {
-          realName: '张三',
-          age: 18,
-          phone: '12345678901',
-          desc: '突然身上通红，起了很多小疹子',
-          department: '皮肤科',
-          docName: '邓林莎',
-          status: 0
+          
         },
-        diagnosis: {
+        diagnostic: {
             id: '',
-            complaints: '',
-            presentHistory: '',
-            oldHistory: '',
             result: '',
             prescription: '',
             orders: ''
@@ -136,50 +121,59 @@ export default {
                 prescription: '氯雷他定片一天一次，一次一颗。',
                 recordId: 1
             },
-            {
-                id: 2,
-                docName: '邓林莎',
-                result: '过敏',
-                score: 4.5,
-                prescription: '氯雷他定片一天一次，一次一颗。',
-                recordId: 1
-            },
-            {
-                id: 3,
-                docName: '邓林莎',
-                result: '过敏',
-                score: 4.5,
-                prescription: '氯雷他定片一天一次，一次一颗。',
-                recordId: 1
-            },
-            {
-                id: 4,
-                docName: '邓林莎',
-                result: '过敏',
-                score: 4.5,
-                prescription: '氯雷他定片一天一次，一次一颗。',
-                recordId: 1
-            },
-            {
-                id: 5,
-                docName: '邓林莎',
-                result: '过敏',
-                score: 4.5,
-                prescription: '氯雷他定片一天一次，一次一颗。',
-                recordId: 1
-            },
-        ]
+            
+        ],
+        rules: {
+            prescription: [
+                { required: true, message: '请输入治疗方案', trigger: 'blur' }
+            ],
+            result: [
+                { required: true, message: '请输入诊断结果', trigger: 'blur' }
+            ]
+        }
     }
   },
-  mounted() {
-
+  async mounted() {
+    this.recordId = this.$route.query.recordId
+    debugger;
+    this.record = await getRecordInfo(this.recordId)
+    if (this.record.diagnostic) {
+        this.diagnostic = {...this.record.diagnostic}
+    }
   },
   methods: {
+    async goBack() {
+      // 返回上一级
+      this.$router.go(-1);
+      if (this.record.status === 0) {
+        // 未查看的病历，医生点击查看详情之后变成已查看
+        await updateRecord({
+          recordId: this.recordId,
+          status: 1
+        })
+      }
+    },
     addDiagnosis() {
         // 提交诊断结果
+        this.$refs.diagnosisRef.validate(async valid => {
+            if (valid) {
+                // const result = await addDiagnosis({
+                //     recordId: this.recordId,
+                //     diagnosis: this.diagnosisForm.diagnosis,
+                //     treatment: this.diagnosisForm.treatment,
+                //     medicine: this.diagnosisForm.medicine
+                // })
+                // if (result) {
+                //     this.$message.success("提交成功");
+                // }
+            }
+        })
     },
     reset() {
         this.$refs.diagnosisRef.resetFields();
+    },
+    queryRecommendList() {
+        // 传入diagnostic，后端返回推荐列表
     }
   },
 }

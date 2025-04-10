@@ -10,15 +10,14 @@
                 v-model="queryForm.cityName"
                 clearable
                 placeholder="请选择地区"
-                style="width: 150px"
+                style="margin-right: 10px"
               >
                 <el-option
                   v-for="item in cities"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                >
-                </el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -29,15 +28,14 @@
                 v-model="queryForm.hospitalName"
                 clearable
                 placeholder="请选择医院"
-                style="width: 150px"
+                style="margin-right: 10px"
               >
                 <el-option
-                  v-for="item in hospList"
-                  :key="item.hospitalName"
-                  :label="item.hospitalName"
-                  :value="item.hospitalName"
-                >
-                </el-option>
+                  v-for="item in hospitalList"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -48,34 +46,14 @@
                 v-model="queryForm.departmentName"
                 clearable
                 placeholder="请选择科室"
-                style="width: 150px"
+                style="margin-right: 10px"
               >
                 <el-option
                   v-for="item in departmentList"
-                  :key="item.departmentName"
-                  :label="item.departmentName"
-                  :value="item.departmentName"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="4">
-            <el-form-item prop="id">
-              <el-select
-                v-model="queryForm.id"
-                clearable
-                placeholder="请选择医生"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in docList"
-                  :key="item.id"
-                  :label="item.docName"
-                  :value="item.id"
-                >
-                </el-option>
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -92,8 +70,7 @@
         <el-col :span="6" v-for="item in queryDocList" :key="item.id">
           <el-card
             shadow="hover"
-            :body-style="{ padding: '0px' }"
-            style="width: 280px; height: 360px"
+            style="width: 300px; height: 150px;"
           >
             <!-- <img
               :src="path + item.pic"
@@ -102,16 +79,12 @@
               height="280px"
               width="280px"
             /> -->
-            <div style="padding: 5px">
-              <span>{{ item.docName }}</span>
-              <span style="margin-left: 8px; color: orange">{{
-                item.departmentName
-              }}</span>
+            <div>
+              <span style="font-size: 20px;">{{ item.doctorName }}</span>
+              <span style="margin-left: 5px;">{{ item.departmentName}}</span>
             </div>
-            <div style="margin-left: 5px; color: red">
-              <span>联系方式:</span>
-              <span>{{ item.phone }}</span>
-            </div>
+            <div style="margin: 5px 0;">{{ item.hospitalName }}</div>
+            <div v-if="item.introduction" style="color: #9f9f9f;">简介：{{ item.introduction }}</div>
           </el-card>
         </el-col>
       </el-row>
@@ -132,13 +105,13 @@
     </div>
 
     <div v-if="queryDocList.length == 0">
-      <el-empty description="请选择查询条件"></el-empty>
+      <el-empty description="暂无数据"></el-empty>
     </div>
   </div>
 </template>
 
 <script>
-import cities from "@/assets/data/cities.js";
+import { getDoctorList, getDoctorListByPage } from "@/api/doctor";
 export default {
   components: {},
   data() {
@@ -152,24 +125,40 @@ export default {
        cityName:'',
        hospitalName:'',
        departmentName:'',
-       id:''
       },
       cities: [],
+      allDoctors: [],
       hospitalList: [],
       departmentList: [],
-      docList: [],
       queryDocList: []
     };
   },
-  mounted() {
-    this.cities = cities;
+  async mounted() {
+    this.allDoctors = await getDoctorList();
+    this.cities = [...new Set(this.allDoctors.map(doctor => doctor.cityName))].map(city => ({
+      label: city,
+      value: city
+    }));
+    this.hospitalList = [...new Set(this.allDoctors.map(doctor => doctor.hospitalName))].map(hospital => ({
+      label: hospital,
+      value: hospital
+    }));
+    this.departmentList = [...new Set(this.allDoctors.map(doctor => doctor.departmentName))].map(department => ({
+      label: department,
+      value: department
+    }));
+    this.handleQuery()
   },
   methods: {
-    handleQuery(params = {}) {
-
+    async handleQuery(params = {}) {
+      this.tableParams = { ...this.tableParams, ...params, ...this.queryForm };
+      const result = await getDoctorListByPage(this.tableParams)
+      this.queryDocList = result.doctorList
+      this.total = result.total
     },
     resetForm() {
       this.$refs.queryFormRef.resetFields();
+      this.handleQuery();
     }
   },
 };
@@ -178,5 +167,12 @@ export default {
 :deep(.el-card__body) {
   height: auto;
   overflow: initial;
+  padding: 10px;
+}
+
+.pagination {
+  height: 50px;
+  margin-top: 16px;
+  margin-left: 66%;
 }
 </style>

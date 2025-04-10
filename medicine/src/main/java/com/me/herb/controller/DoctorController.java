@@ -2,11 +2,13 @@ package com.me.herb.controller;
 
 import com.me.common.Result;
 import com.me.herb.pojo.Doctor;
+import com.me.herb.pojo.DoctorDTO;
 import com.me.herb.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value="/doctor")
@@ -46,5 +48,11 @@ public class DoctorController {
     public Result queryAll() {
         List<Doctor> doctor = doctorService.queryAll();
         return Result.success(doctor);
+    }
+
+    @PostMapping("/page")
+    public Result queryDoctors(@RequestBody DoctorDTO doctorDTO) {
+        Map<String, Object> result = doctorService.queryDoctorList(doctorDTO);
+        return Result.success(result);
     }
 }

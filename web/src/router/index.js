@@ -59,7 +59,14 @@ const routes = [
         path:"/diagnosis/detail",
         name:"diagnosisDetail",
         component: () => import('@/views/diagnosis/detail.vue'),
-      }
+      },
+      {
+        path:"/home/statistics",
+        name:"统计分析",
+        icon: "el-icon-c-scale-to-original",
+        component: () => import('@/views/statistics/index.vue'),
+        meta: { roles: [1] }
+      },
     ]
   },
 ]

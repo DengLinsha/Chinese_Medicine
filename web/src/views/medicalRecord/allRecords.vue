@@ -84,6 +84,7 @@
 
 <script>
 import { getRecordList } from '@/api/record';
+import { getPatientInfo } from "@/api/patient";
 export default {
   components: {},
   data() {
@@ -97,14 +98,22 @@ export default {
       total: 0,
     };
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user.userInfo;
+    },
+  },
   mounted() {
     this.handleQuery();
   },
   methods: {
     async handleQuery(params = {}) {
+      const patient = await getPatientInfo(this.userInfo.userId)
       this.tableParams = { ...this.tableParams, ...params };
       const result = await getRecordList(this.tableParams)
-      this.recordList = result.recordList
+      this.recordList = result.recordList.filter(item => {
+        return item.patientName === patient.patientName;
+      });
       this.total = result.total;
     },
     goRecordDetail(recordId) {
@@ -142,7 +151,7 @@ export default {
 .pagination {
   height: 50px;
   margin-top: 16px;
-  margin-left: 60%;
+  margin-left: 66%;
 }
 </style>
 

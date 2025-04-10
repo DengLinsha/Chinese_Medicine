@@ -24,4 +24,36 @@
     <select id="queryAll" resultType="Doctor">
         select * from doctor;
     </select>
+
+    <!-- 在DoctorMapper.xml中添加分页查询 -->
+    <select id="selectDoctorList" resultType="Doctor" parameterType="map">
+        SELECT * FROM doctor
+        <where>
+            <if test="cityName != null and cityName != ''">
+                AND cityName = #{cityName}
+            </if>
+            <if test="hospitalName != null and hospitalName != ''">
+                AND hospitalName = #{hospitalName}
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                AND departmentName = #{departmentName}
+            </if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countDoctorList" resultType="int" parameterType="map">
+        SELECT COUNT(*) FROM doctor
+        <where>
+            <if test="cityName != null and cityName != ''">
+                AND cityName = #{cityName}
+            </if>
+            <if test="hospitalName != null and hospitalName != ''">
+                AND hospitalName = #{hospitalName}
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                AND departmentName = #{departmentName}
+            </if>
+        </where>
+    </select>
 </mapper>

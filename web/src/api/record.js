@@ -10,8 +10,9 @@ export function addRecord(data) {
 
 export function getRecordList(data) {
     return request({
-        url: `/record?page=${data.page}&pageSize=${data.pageSize}`,
-        method: 'get',
+        url: `/record/page`,
+        method: 'post',
+        data
     })
 }
 

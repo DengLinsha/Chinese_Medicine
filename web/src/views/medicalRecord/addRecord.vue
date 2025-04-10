@@ -108,7 +108,7 @@
                 <el-option
                   v-for="item in docList"
                   :key="item.doctorId"
-                  :label="item.name"
+                  :label="item.doctorName"
                   :value="item.doctorId"
                 />
               </el-select>
@@ -264,7 +264,7 @@ export default {
       this.docList = this.allDoctors
         .filter(doctor => doctor.departmentName === this.departmentName)
         .map(doctor => ({
-          name: doctor.name,
+          doctorName: doctor.doctorName,
           doctorId: doctor.doctorId
         }));
       this.recordInfoForm.doctorId = ''; // 重置医生选择

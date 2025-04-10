@@ -8,7 +8,7 @@
               <i class="el-icon-user"></i>
               患者姓名
             </template>
-            {{ item.realName }}
+            {{ item.patientName }}
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -29,7 +29,7 @@
               <i class="el-icon-tickets"></i>
               病症详情
             </template>
-            <span class="text-ellipsis">{{ item.desc }}</span>
+            <span class="text-ellipsis">{{ item.description }}</span>
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { getRecordList } from '@/api/record';
 export default {
   components: {
 
@@ -85,79 +86,27 @@ export default {
   mounted() {
     this.handleQuery()
   },
-  methods: {
-    handleQuery(params = {}) {
-      this.tableParams = { ...this.tableParams, ...params };
-      this.recordList = [
-        {
-          id: 1,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 0,
-        },
-        {
-          id: 2,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-        {
-          id: 3,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 3,
-        },
-        {
-          id: 4,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 3,
-        },
-        {
-          id: 5,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 2,
-        },
-        {
-          id: 6,
-          realName: "张三",
-          phone: "12345678901",
-          age: 18,
-          desc: "突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况。突然身上通红，起了很多小疹子，很痒，晚上都没怎么睡着觉，一直抠来抠去的。之前从来没有出现过这种情况",
-          department: "皮肤科",
-          docName: "邓林莎",
-          status: 1,
-        },
-      ];
-      if (this.activeName === 'noDiagnosis') {
-        this.recordList = this.recordList.filter(item => item.status === 0 || item.status === 1)
+  watch: {
+    activeName(newVal, oldVal) {
+      console.log(newVal, oldVal);
+      
+      if (newVal === 'noDiagnosis') {
+        this.tableParams.status = '0,1,2'
       }
-      this.total = this.recordList.length;
-    },
+      this.handleQuery();
+    }
+  },
+  methods: {
+    async handleQuery(params = {}) {
+      this.tableParams = { ...this.tableParams, ...params };
+      const result = await getRecordList(this.tableParams)
+      this.recordList = result.recordList
+      this.total = result.total;
+      
+    }, 
     goRecordDetail(item) {
       this.$router.push({
-        path: '/diagnosis/detail'
+        path: '/diagnosis/detail?recordId=' + item.recordId
       })
     }
   },
@@ -199,6 +148,6 @@ export default {
 .pagination {
   height: 50px;
   margin-top: 16px;
-  margin-left: 60%;
+  margin-left: 66%;
 }
 </style>

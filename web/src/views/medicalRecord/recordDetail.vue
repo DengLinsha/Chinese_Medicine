@@ -2,6 +2,7 @@
   <div>
     <el-card style="margin-bottom: 20px; width: 100%;">
       <div slot="header" class="clearfix">
+        <i class="el-icon-back" @click="goBack" style="cursor: pointer;margin-right: 5px;"></i>
         <span>病历详情</span>
       </div>
       <el-row :gutter="24">
@@ -120,26 +121,6 @@
               <!-- 只能删除自己的评论 -->
               <i v-if="comment.userId == userInfo.userId" class="el-icon-delete" style="font-size: 12px;cursor: pointer;" @click="deleteCommentById(comment)"></i>
             </div>
-            <!-- <div v-if="replyShow" class="reply-container">
-              <el-form :model="replyForm">
-                <el-form-item>
-                  <el-input
-                    type="textarea"
-                    style="width: 95%; margin-left: 10px;"
-                    v-model="replyForm.content"
-                    :placeholder="'回复：' + replyForm.replyedName"
-                    autocomplete="off"
-                  ></el-input>
-                  <el-button
-                    type="primary"
-                    round
-                    style="float: right; margin-top: 15px; margin-right: 10px"
-                    @click="submitReply"
-                    >回复</el-button
-                  >
-                </el-form-item>
-              </el-form>
-            </div> -->
             <!-- 显示回复 -->
             <div v-if="comment.replies" style="margin-left: 16px;">
               <div v-if="!comment.showAllReplies && comment.replies.length > 1">
@@ -254,6 +235,11 @@ export default {
     this.replyForm.role = this.userInfo.role
   },
   methods: {
+    async goBack() {
+      // 返回上一级
+      this.$router.go(-1);
+      localStorage.removeItem('recordId')
+    },
     async fetchComments() {
       const result = await getCommentList(this.recordId);
       this.commentsList = result.map(comment => ({

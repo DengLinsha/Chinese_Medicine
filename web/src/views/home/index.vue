@@ -3,7 +3,7 @@
     <el-container style="height: 100%">
       <el-header class="flex-align-center">
         <h2 style="color: white; margin-left: 20px; width: 96%;">中医在线诊断平台</h2>
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="hover">
           <span class="el-dropdown-link">
               <i style="font-size: 18px; color: white" class="el-icon-user"></i>
               <!-- <el-avatar :size="45" style="margin-top: 7px">

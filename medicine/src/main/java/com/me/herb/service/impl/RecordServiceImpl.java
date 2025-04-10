@@ -1,9 +1,7 @@
 package com.me.herb.service.impl;
 
 import com.me.herb.mapper.RecordMapper;
-import com.me.herb.pojo.Diagnostic;
-import com.me.herb.pojo.Record;
-import com.me.herb.pojo.RecordDTO;
+import com.me.herb.pojo.*;
 import com.me.herb.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,20 +21,23 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public Map<String, Object> getRecordList(int page, int pageSize) {
+    public Map<String, Object> getRecordList(RecordQueryDTO recordQueryDTO) {
         // 计算偏移量
-        int offset = (page - 1) * pageSize;
+        int offset = (recordQueryDTO.getPage() - 1) * recordQueryDTO.getPageSize();
 
-        // 查询病历列表
-        List<RecordDTO> recordList = recordMapper.queryAll(offset, pageSize);
+        // 构建查询参数
+        Map<String, Object> params = new HashMap<>();
+        params.put("status", recordQueryDTO.getStatus());
+        params.put("offset", offset);
+        params.put("pageSize", recordQueryDTO.getPageSize());
 
-        // 查询病历总数
-        int total = recordMapper.countRecordList();
+        // 查询数据
+        List<RecordDTO> recordList = recordMapper.queryAll(params);
+        int total = recordMapper.countRecordList(params);
 
-        // 返回结果
         Map<String, Object> result = new HashMap<>();
-        result.put("recordList", recordList);
         result.put("total", total);
+        result.put("recordList", recordList);
         return result;
     }
 

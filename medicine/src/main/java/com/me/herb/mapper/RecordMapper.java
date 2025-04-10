@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RecordMapper {
@@ -13,10 +14,10 @@ public interface RecordMapper {
     int add(Record record);
 
     // 查询全部病历信息
-    List<RecordDTO> queryAll(@Param("offset") int offset, @Param("pageSize") int pageSize);
+    List<RecordDTO> queryAll(Map<String, Object> params);
 
     // 查询病历总数
-    int countRecordList();
+    int countRecordList(Map<String, Object> params);
 
     // 查询病历详情
     Record queryRecordById(@Param("recordId") int recordId);

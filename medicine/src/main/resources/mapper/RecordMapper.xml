@@ -11,7 +11,7 @@
         VALUES (#{patientId}, #{doctorId}, #{patientName}, #{sex}, #{age}, #{phone}, #{oldHistory}, #{allergiesHistory}, #{habits}, #{description}, #{tongue})
     </insert>
 
-    <select id="queryAll" resultType="RecordDTO">
+    <select id="queryAll" resultType="RecordDTO" parameterType="map">
         SELECT
             r.recordId,
             r.patientName,
@@ -26,13 +26,46 @@
             record r
                 LEFT JOIN
             doctor d ON r.doctorId = d.doctorId
+        <where>
+            <!-- 如果传入了status参数，则按状态筛选 -->
+            <!-- 处理逗号分隔的状态字符串 -->
+            <if test="statusStr != null and statusStr != ''">
+                AND r.status IN
+                <foreach item="status" collection="statusStr.split(',')" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <!-- 可以添加其他查询条件 -->
+            <if test="patientName != null and patientName != ''">
+                AND r.patientName LIKE CONCAT('%', #{patientName}, '%')
+            </if>
+            <if test="doctorName != null and doctorName != ''">
+                AND d.doctorName LIKE CONCAT('%', #{doctorName}, '%')
+            </if>
+        </where>
         ORDER BY
             r.createTime DESC
             LIMIT #{offset}, #{pageSize}
     </select>
 
-    <select id="countRecordList" resultType="int">
-        SELECT COUNT(*) FROM record
+    <select id="countRecordList" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+        FROM record r
+        LEFT JOIN doctor d ON r.doctorId = d.doctorId
+        <where>
+            <if test="statusStr != null and statusStr != ''">
+                AND r.status IN
+                <foreach item="status" collection="statusStr.split(',')" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="patientName != null and patientName != ''">
+                AND r.patientName LIKE CONCAT('%', #{patientName}, '%')
+            </if>
+            <if test="doctorName != null and doctorName != ''">
+                AND d.doctorName LIKE CONCAT('%', #{doctorName}, '%')
+            </if>
+        </where>
     </select>
 
     <select id="queryRecordById" parameterType="int" resultType="Record">

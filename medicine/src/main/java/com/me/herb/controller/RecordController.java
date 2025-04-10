@@ -2,7 +2,9 @@ package com.me.herb.controller;
 
 import com.me.common.Result;
 import com.me.herb.pojo.Diagnostic;
+import com.me.herb.pojo.DoctorDTO;
 import com.me.herb.pojo.Record;
+import com.me.herb.pojo.RecordQueryDTO;
 import com.me.herb.service.DiagnosticService;
 import com.me.herb.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +30,9 @@ public class RecordController {
         }
     }
 
-    @GetMapping
-    public Result getRecordList(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int pageSize
-    ) {
-        Map<String, Object> result = recordService.getRecordList(page, pageSize);
+    @PostMapping("/page")
+    public Result getRecordList(@RequestBody RecordQueryDTO recordQueryDTO) {
+        Map<String, Object> result = recordService.getRecordList(recordQueryDTO);
         return Result.success(result);
     }
 

@@ -23,3 +23,12 @@ export function getDoctorList() {
     method: 'get',
   })
 }
+
+// 分页查询
+export function getDoctorListByPage(data) {
+  return request({
+    url: `/doctor/page`,
+    method: 'post',
+    data
+  })
+}
