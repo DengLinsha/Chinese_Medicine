@@ -8,6 +8,7 @@
           v-model="ruleForm.identity"
           clearable
           autocomplete="off"
+          @keyup.enter.native="login"
         >
           <template #prefix>
             <i class="el-icon-user"></i>
@@ -21,6 +22,7 @@
           v-model="ruleForm.password"
           show-password
           autocomplete="off"
+          @keyup.enter.native="login"
         >
           <template #prefix>
             <i class="el-icon-lock"></i>

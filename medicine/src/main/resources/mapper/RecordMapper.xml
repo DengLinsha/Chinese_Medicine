@@ -29,9 +29,9 @@
         <where>
             <!-- 如果传入了status参数，则按状态筛选 -->
             <!-- 处理逗号分隔的状态字符串 -->
-            <if test="statusStr != null and statusStr != ''">
+            <if test="status != null and status != ''">
                 AND r.status IN
-                <foreach item="status" collection="statusStr.split(',')" open="(" separator="," close=")">
+                <foreach item="status" collection="status.split(',')" open="(" separator="," close=")">
                     #{status}
                 </foreach>
             </if>
@@ -53,9 +53,9 @@
         FROM record r
         LEFT JOIN doctor d ON r.doctorId = d.doctorId
         <where>
-            <if test="statusStr != null and statusStr != ''">
+            <if test="status != null and status != ''">
                 AND r.status IN
-                <foreach item="status" collection="statusStr.split(',')" open="(" separator="," close=")">
+                <foreach item="status" collection="status.split(',')" open="(" separator="," close=")">
                     #{status}
                 </foreach>
             </if>

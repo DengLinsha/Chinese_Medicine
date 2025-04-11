@@ -37,7 +37,7 @@
               :index="item.path"
             >
               <i :class="item.icon"></i>
-              <span slot="title">{{ item.name }}</span>
+              <span slot="title">{{ item.name }}<el-badge is-dot v-if="item.name==='医患交流'"></el-badge></span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -366,5 +366,9 @@ export default {
 
 .aside-container {
   transition: width 0.3s ease; /* 添加宽度变化的过渡效果 */
+}
+
+:deep(.el-badge__content.is-fixed.is-dot) {
+  top: 6px;
 }
 </style>

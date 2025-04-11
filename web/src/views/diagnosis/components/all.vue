@@ -88,16 +88,17 @@ export default {
   },
   watch: {
     activeName(newVal, oldVal) {
-      console.log(newVal, oldVal);
-      
       if (newVal === 'noDiagnosis') {
         this.tableParams.status = '0,1,2'
+      } else {
+        this.tableParams.status = ''
       }
       this.handleQuery();
     }
   },
   methods: {
     async handleQuery(params = {}) {
+      
       this.tableParams = { ...this.tableParams, ...params };
       const result = await getRecordList(this.tableParams)
       this.recordList = result.recordList

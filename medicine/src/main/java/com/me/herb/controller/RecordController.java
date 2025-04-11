@@ -32,6 +32,7 @@ public class RecordController {
 
     @PostMapping("/page")
     public Result getRecordList(@RequestBody RecordQueryDTO recordQueryDTO) {
+        System.out.println(recordQueryDTO.toString());
         Map<String, Object> result = recordService.getRecordList(recordQueryDTO);
         return Result.success(result);
     }

@@ -61,6 +61,13 @@ const routes = [
         component: () => import('@/views/diagnosis/detail.vue'),
       },
       {
+        path:"/home/communicate",
+        name:"医患交流",
+        icon: "el-icon-chat-line-round",
+        component: () => import('@/views/communicate/index.vue'),
+        meta: { roles: [1] }
+      },
+      {
         path:"/home/statistics",
         name:"统计分析",
         icon: "el-icon-c-scale-to-original",
