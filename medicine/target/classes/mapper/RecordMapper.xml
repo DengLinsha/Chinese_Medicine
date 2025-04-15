@@ -19,6 +19,9 @@
             r.age,
             r.description,
             r.status,
+            r.score,
+            r.createTime,
+            r.updateTime,
             d.doctorName,
             d.departmentName,
             d.hospitalName

@@ -13,6 +13,8 @@
 
 <script>
 import * as echarts from 'echarts';
+import { getRecordList } from '@/api/record';
+import { getDoctorInfo, getDoctorList } from '@/api/doctor';
 export default {
   components: {
 
@@ -21,16 +23,47 @@ export default {
     return {
         scoreChart: null,
         rateChart: null,
-        efficiencyChart: null
+        efficiencyChart: null,
+        recordList: [],
+        tableParams: {
+            page: 1,
+            pageSize: 1000,
+        },
+        doctorList: [],
+        averageScores: {}
     }
   },
-  mounted() {
+  computed: {
+    userInfo() {    
+        return this.$store.state.user.userInfo;
+    }
+  },
+  async mounted() {
+    const result = await getRecordList(this.tableParams)
+    this.recordList = result.recordList;
+    this.doctorList = await getDoctorList();
+    
     this.score();
     this.rateTrend();
     this.efficiency()
   },
   methods: {
     score() {
+        const doctorScores = {}
+        this.recordList.forEach(record => {
+            let { doctorName, score } = record;
+            if (!doctorScores[doctorName]) {
+                doctorScores[doctorName] = { totalScore: 0, count: 0 }
+            }
+            if (!score) {
+                score = 0
+            }
+            doctorScores[doctorName].totalScore += score;
+            doctorScores[doctorName].count++;
+        })
+        for (const doctorName in doctorScores) {
+            this.averageScores[doctorName] = doctorScores[doctorName].totalScore / doctorScores[doctorName].count;
+        }
         const option = {
             title: {
                 text: '医生排名图'
@@ -46,18 +79,22 @@ export default {
             },
             yAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: Object.keys(this.averageScores)
             },
             series: [
                 {
-                data: [120, 200, 150, 80, 70, 110, 130],
-                type: 'bar'
+                    data: Object.values(this.averageScores),
+                    type: 'bar'
                 }
             ]
         };
         this.initChart(this.$refs.scoreChart, option)
     },
-    rateTrend() {
+    async rateTrend() {
+        const doctor = await getDoctorInfo(this.userInfo.userId);
+        const filteredRecordList = this.recordList.filter(item => {
+            return item.doctorId === doctor.doctorId;
+        })
         const option = {
             title: {
                 text: '医生评分趋势图'
@@ -70,14 +107,14 @@ export default {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: filteredRecordList.map(item => item.createTime)
             },
             yAxis: {
                 type: 'value'
             },
             series: [
                 {
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: filteredRecordList.map(item => item.score),
                 type: 'line',
                 smooth: true
                 }
@@ -86,6 +123,21 @@ export default {
         this.initChart(this.$refs.rateChart, option)
     },
     efficiency() {
+        // 医生平均效率
+        const doctorEfficiency = {}
+        this.recordList.forEach(item => {
+            let {doctorName, createTime, updateTime} = item;
+            if (!doctorEfficiency[doctorName]) {
+                doctorEfficiency[doctorName] = { totalDuration: 0, count: 0 };
+            }
+            const duration = new Date(updateTime) - new Date(createTime);
+            doctorEfficiency[doctorName].totalDuration += duration;
+            doctorEfficiency[doctorName].count++;
+        });
+        const averageEfficiency = {};
+        for (const doctorName in doctorEfficiency) {
+            averageEfficiency[doctorName] = doctorEfficiency[doctorName].totalDuration / doctorEfficiency[doctorName].count / 1000 / 60; // 转换为分钟
+        }
         const option = {
             title: {
                 text: '平均问诊时长图'
@@ -98,14 +150,14 @@ export default {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: Object.keys(averageEfficiency)
             },
             yAxis: {
                 type: 'value'
             },
             series: [
                 {
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: Object.values(averageEfficiency),
                 type: 'line',
                 smooth: true
                 }
