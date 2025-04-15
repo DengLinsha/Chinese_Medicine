@@ -34,7 +34,7 @@
         </collection>
     </resultMap>
 
-    <select id="queryAll" resultMap="commentWithRepliesMap">
+    <select id="queryByRecordId" resultMap="commentWithRepliesMap">
         SELECT
             c.commentId,
             c.userId,
@@ -64,4 +64,29 @@
     <delete id="delete" parameterType="Integer">
         delete from medicine.comment where commentId=#{commentId};
     </delete>
+
+    <select id="queryBy" resultMap="commentWithRepliesMap">
+        SELECT
+            c.commentId,
+            c.userId,
+            c.recordId,
+            c.role,
+            c.content,
+            c.username,
+            c.createTime,
+            r.replyId,
+            r.commentId AS r_comment_id,
+            r.userId AS r_user_id,
+            r.role AS r_role,
+            r.content AS r_content,
+            r.username AS r_username,
+            r.replyedName as replyedName,
+            r.createTime AS r_create_time
+        FROM
+            comment c
+                LEFT JOIN
+            reply r ON c.commentId = r.commentId
+        ORDER BY
+            c.createTime DESC, r.createTime ASC
+    </select>
 </mapper>

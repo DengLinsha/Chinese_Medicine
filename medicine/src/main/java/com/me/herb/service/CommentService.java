@@ -7,7 +7,9 @@ import java.util.List;
 public interface CommentService {
     int add(Comment comment);
 
-    List<Comment> queryAll(Integer recordId);
+    List<Comment> queryByRecordId(Integer recordId);
 
     void delete(Integer commentId);
+
+    List<Comment> queryAll();
 }

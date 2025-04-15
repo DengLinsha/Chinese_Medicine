@@ -37,7 +37,8 @@
               :index="item.path"
             >
               <i :class="item.icon"></i>
-              <span slot="title">{{ item.name }}<el-badge is-dot v-if="item.name==='医患交流'"></el-badge></span>
+              <span slot="title">{{ item.name }}</span>
+              <!-- <el-badge is-dot v-if="item.name==='医患交流'"></el-badge> -->
             </el-menu-item>
           </el-menu>
         </el-aside>

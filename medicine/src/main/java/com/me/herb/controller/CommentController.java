@@ -26,7 +26,13 @@ public class CommentController {
 
     @GetMapping("/{recordId}")
     public Result getCommentList(@PathVariable Integer recordId) {
-        List<Comment> commentList = commentService.queryAll(recordId);
+        List<Comment> commentList = commentService.queryByRecordId(recordId);
+        return Result.success(commentList);
+    }
+
+    @GetMapping
+    public Result getAllCommentList() {
+        List<Comment> commentList = commentService.queryAll();
         return Result.success(commentList);
     }
 

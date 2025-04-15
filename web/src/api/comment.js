@@ -11,10 +11,18 @@ export function publishComment(data) {
 
 // 获取评论列表
 export function getCommentList(recordId) {
-  return request({
-    url: `/comment/${recordId}`,
-    method: 'get',
-  })
+  if (!recordId) {
+    return request({
+      url: `/comment`,
+      method: 'get',
+    })
+  } else {
+    return request({
+      url: `/comment/${recordId}`,
+      method: 'get',
+    })
+  }
+  
 }
 
 // 删除评论

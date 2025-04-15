@@ -6,6 +6,7 @@ import com.me.herb.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -18,12 +19,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> queryAll(Integer recordId) {
-        return commentMapper.queryAll(recordId);
+    public List<Comment> queryByRecordId(Integer recordId) {
+        return commentMapper.queryByRecordId(recordId);
     }
 
     @Override
     public void delete(Integer commentId) {
         commentMapper.delete(commentId);
+    }
+
+    @Override
+    public List<Comment> queryAll() {
+        return commentMapper.queryBy();
     }
 }

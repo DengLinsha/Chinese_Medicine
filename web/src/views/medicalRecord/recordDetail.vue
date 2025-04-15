@@ -68,7 +68,7 @@
 
       <div class="btn">
         <el-button v-if="record.status != 3" type="primary" @click="endDialog">结束诊断</el-button>
-        <el-button @click="comment">对此诊断有疑问</el-button>
+        <el-button @click="comment">对此诊断有疑问？</el-button>
       </div>
 
       <div class="rate" v-if="show == true" style="margin-top: 10px;">
@@ -84,7 +84,7 @@
 
     <!-- 评论界面-->
     <el-drawer title="评论详情" :visible.sync="drawer">
-      <h3 style="text-align: center; margin-bottom: 20px;">向医生提出你的问题吧</h3>
+      <h3 style="text-align: center; margin-bottom: 20px;">提出你的疑问吧</h3>
       <!--评论填写-->
       <el-form :model="commentForm">
         <el-form-item>
@@ -233,6 +233,10 @@ export default {
     this.replyForm.userId = this.userInfo.userId
     this.replyForm.username = this.userInfo.username
     this.replyForm.role = this.userInfo.role
+
+    if (this.userInfo.role == 1) {
+      this.comment()
+    }
   },
   methods: {
     async goBack() {
