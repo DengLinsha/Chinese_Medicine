@@ -11,45 +11,45 @@
         VALUES (#{patientId}, #{doctorId}, #{patientName}, #{sex}, #{age}, #{phone}, #{oldHistory}, #{allergiesHistory}, #{habits}, #{description}, #{tongue})
     </insert>
 
-    <select id="queryAll" resultType="RecordDTO" parameterType="map">
+    <select id="queryAll" resultType="RecordDTO" parameterType="com.example.model.RecordQueryParams">
         SELECT
-            r.recordId,
-            r.patientName,
-            r.phone,
-            r.age,
-            r.description,
-            r.status,
-            r.score,
-            r.createTime,
-            r.updateTime,
-            d.doctorId,
-            d.doctorName,
-            d.departmentName,
-            d.hospitalName
+        r.recordId,
+        r.patientName,
+        r.phone,
+        r.age,
+        r.description,
+        r.status,
+        r.score,
+        r.createTime,
+        r.updateTime,
+        d.doctorId,
+        d.doctorName,
+        d.departmentName,
+        d.hospitalName
         FROM
-            record r
-                LEFT JOIN
-            doctor d ON r.doctorId = d.doctorId
+        record r
+        LEFT JOIN
+        doctor d ON r.doctorId = d.doctorId
         <where>
             <!-- 如果传入了status参数，则按状态筛选 -->
-            <!-- 处理逗号分隔的状态字符串 -->
-            <if test="status != null and status != ''">
+            <if test="status != null and !status.isEmpty()">
                 AND r.status IN
-                <foreach item="status" collection="status.split(',')" open="(" separator="," close=")">
-                    #{status}
+                <foreach item="item" collection="status.split(',')" open="(" separator="," close=")">
+                    #{item}
                 </foreach>
             </if>
-            <!-- 可以添加其他查询条件 -->
-            <if test="patientName != null and patientName != ''">
-                AND r.patientName LIKE CONCAT('%', #{patientName}, '%')
+            <!-- 如果传入了patientId，则按患者ID筛选 -->
+            <if test="patientId != null">
+                AND r.patientId = #{patientId}
             </if>
-            <if test="doctorName != null and doctorName != ''">
-                AND d.doctorName LIKE CONCAT('%', #{doctorName}, '%')
+            <!-- 如果传入了doctorId，则按医生ID筛选 -->
+            <if test="doctorId != null">
+                AND d.doctorId = #{doctorId}
             </if>
         </where>
         ORDER BY
-            r.createTime DESC
-            LIMIT #{offset}, #{pageSize}
+        r.createTime DESC
+        LIMIT #{offset}, #{pageSize}
     </select>
 
     <select id="countRecordList" resultType="int" parameterType="map">

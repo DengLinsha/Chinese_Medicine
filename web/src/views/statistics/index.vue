@@ -27,7 +27,7 @@ export default {
         recordList: [],
         tableParams: {
             page: 1,
-            pageSize: 1000,
+            pageSize: 10000,
         },
         doctorList: [],
         averageScores: {}
@@ -39,7 +39,7 @@ export default {
     }
   },
   async mounted() {
-    const result = await getRecordList(this.tableParams)
+    const result = await getRecordList({...this.tableParams, })
     this.recordList = result.recordList;
     this.doctorList = await getDoctorList();
     
@@ -123,16 +123,18 @@ export default {
         this.initChart(this.$refs.rateChart, option)
     },
     efficiency() {
-        // 医生平均效率
+        // 医生平均效率（诊断完成）
         const doctorEfficiency = {}
         this.recordList.forEach(item => {
-            let {doctorName, createTime, updateTime} = item;
-            if (!doctorEfficiency[doctorName]) {
-                doctorEfficiency[doctorName] = { totalDuration: 0, count: 0 };
+            let {doctorName, createTime, updateTime, status} = item;
+            if (status === 3) {
+                if (!doctorEfficiency[doctorName]) {
+                    doctorEfficiency[doctorName] = { totalDuration: 0, count: 0 };
+                }
+                const duration = new Date(updateTime) - new Date(createTime);
+                doctorEfficiency[doctorName].totalDuration += duration;
+                doctorEfficiency[doctorName].count++;
             }
-            const duration = new Date(updateTime) - new Date(createTime);
-            doctorEfficiency[doctorName].totalDuration += duration;
-            doctorEfficiency[doctorName].count++;
         });
         const averageEfficiency = {};
         for (const doctorName in doctorEfficiency) {

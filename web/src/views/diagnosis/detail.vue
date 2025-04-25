@@ -135,7 +135,6 @@ export default {
   },
   async mounted() {
     this.recordId = this.$route.query.recordId
-    debugger;
     this.record = await getRecordInfo(this.recordId)
     if (this.record.diagnostic) {
         this.diagnostic = {...this.record.diagnostic}

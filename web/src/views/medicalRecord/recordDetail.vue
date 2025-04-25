@@ -279,6 +279,12 @@ export default {
       this.$message.success("感谢您的评价!")
       this.show = false
     },
+
+    async notice() {
+      await publishComment({...this.commentForm, content: `请${this.record.doctorName}及时查看病历`})
+      this.$message.success("通知成功!")
+      await this.fetchComments()
+    },
     
     async submitComment() {
       await publishComment(this.commentForm)

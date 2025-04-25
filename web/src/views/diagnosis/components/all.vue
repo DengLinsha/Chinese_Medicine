@@ -68,6 +68,7 @@
 
 <script>
 import { getRecordList } from '@/api/record';
+import { getDoctorInfo } from '@/api/doctor';
 export default {
   components: {
 
@@ -82,6 +83,11 @@ export default {
       },
       total: 0,
     }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user.userInfo;
+    },
   },
   mounted() {
     this.handleQuery()
@@ -98,8 +104,8 @@ export default {
   },
   methods: {
     async handleQuery(params = {}) {
-      
-      this.tableParams = { ...this.tableParams, ...params };
+      const doctor = await getDoctorInfo(this.userInfo.userId)
+      this.tableParams = { ...this.tableParams, ...params, doctorId: doctor.doctorId };
       const result = await getRecordList(this.tableParams)
       this.recordList = result.recordList
       this.total = result.total;
