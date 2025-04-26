@@ -20,5 +20,5 @@ public class User {
     private String email;
     // 0：患者；1：医生
     private Integer role;
-    private Date create_time;
+    private Date createTime;
 }

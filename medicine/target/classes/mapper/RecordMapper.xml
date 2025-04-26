@@ -22,6 +22,7 @@
             r.score,
             r.createTime,
             r.updateTime,
+            d.doctorId,
             d.doctorName,
             d.departmentName,
             d.hospitalName

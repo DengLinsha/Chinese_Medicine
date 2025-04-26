@@ -6,7 +6,7 @@ spring:
     #数据库用户名
     username: root
     #数据库用户密码
-    password: 123456
+    password: sha021207
     #serverTimezone=UTC 解决市区的报错 一般mysql是8.0以上的是必须配置这个
     #userUnicode=true&characterEncoding=utf-8 指定字符编码、解码格式
     url: jdbc:mysql://localhost:3306/medicine?serverTimezone=UTC&userUnicode=true&characterEncoding=utf-8
