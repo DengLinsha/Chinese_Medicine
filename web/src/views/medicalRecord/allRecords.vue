@@ -109,11 +109,9 @@ export default {
   methods: {
     async handleQuery(params = {}) {
       const patient = await getPatientInfo(this.userInfo.userId)
-      this.tableParams = { ...this.tableParams, ...params };
+      this.tableParams = { ...this.tableParams, ...params, patientId: patient.patientId };
       const result = await getRecordList(this.tableParams)
-      this.recordList = result.recordList.filter(item => {
-        return item.patientName === patient.patientName;
-      });
+      this.recordList = result.recordList
       this.total = result.total;
     },
     goRecordDetail(recordId) {
