@@ -15,18 +15,19 @@
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
-              <i class="el-icon-mobile-phone"></i>
-              手机号
-            </template>
-            {{ item.phone }}
-          </el-descriptions-item>
-          <el-descriptions-item>
-            <template slot="label">
               <i class="el-icon-time"></i>
               年龄
             </template>
             {{ item.age }}
           </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <i class="el-icon-time"></i>
+              就诊时间
+            </template>
+            {{ item.createTime }}
+          </el-descriptions-item>
+          
           <el-descriptions-item :contentStyle="{ width: '350px' }">
             <template slot="label">
               <i class="el-icon-tickets"></i>
@@ -53,13 +54,17 @@
               <i class="el-icon-notebook-1"></i>
               病历状态
             </template>
+            <el-tag v-if="item.status == 4" size="small">待提交</el-tag>
             <el-tag v-if="item.status == 0" size="small">未查看</el-tag>
-
             <el-tag v-if="item.status == 1" size="small">已查看</el-tag>
             <el-tag v-if="item.status == 2" size="small">已诊断</el-tag>
             <el-tag v-if="item.status == 3" size="small">诊断已结束</el-tag>
+            
             <!-- <el-tag  @click="recordDetail(item)" style="margin-left: 10px" size="small">点击查看详情</el-tag> -->
-            <el-link style="margin-left: 10px" type="primary" @click="goRecordDetail(item.recordId)"
+            <el-link v-if="item.status == 4" style="margin-left: 10px" type="primary" @click="goRecordDetail(item)"
+              >点击编辑病历</el-link
+            >
+            <el-link v-else style="margin-left: 10px" type="primary" @click="goRecordDetail(item)"
               >点击查看详情</el-link
             >
           </el-descriptions-item>
@@ -114,11 +119,21 @@ export default {
       this.recordList = result.recordList
       this.total = result.total;
     },
-    goRecordDetail(recordId) {
-      localStorage.setItem('recordId', recordId)
-      this.$router.push({
-        path: '/home/recordDetail'
-      })
+    goRecordDetail(record) {
+      localStorage.setItem('recordId', record.recordId)
+      if (record.status == 4) {
+        this.$router.push({
+          path: '/home/addRecord',
+          query: {
+            recordId: record.recordId
+          }
+        })
+      } else {
+        this.$router.push({
+          path: '/home/recordDetail'
+        })
+      }
+      
     }
   },
 };

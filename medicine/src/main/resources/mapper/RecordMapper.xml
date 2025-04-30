@@ -7,8 +7,24 @@
 
     <!-- 插入病历记录 -->
     <insert id="add" parameterType="Record">
-        INSERT INTO record (patientId, doctorId, patientName, sex, age, phone, oldHistory, allergiesHistory, habits, description, tongue)
-        VALUES (#{patientId}, #{doctorId}, #{patientName}, #{sex}, #{age}, #{phone}, #{oldHistory}, #{allergiesHistory}, #{habits}, #{description}, #{tongue})
+        INSERT INTO record (
+            recordId, patientId, doctorId, patientName, sex, age, phone, oldHistory, allergiesHistory, habits, description, tongue, status
+        ) VALUES (
+                     #{recordId}, #{patientId}, #{doctorId}, #{patientName}, #{sex}, #{age}, #{phone}, #{oldHistory}, #{allergiesHistory}, #{habits}, #{description}, #{tongue}, #{status}
+                 )
+            ON DUPLICATE KEY UPDATE
+                                 patientId = VALUES(patientId),
+                                 doctorId = VALUES(doctorId),
+                                 patientName = VALUES(patientName),
+                                 sex = VALUES(sex),
+                                 age = VALUES(age),
+                                 phone = VALUES(phone),
+                                 oldHistory = VALUES(oldHistory),
+                                 allergiesHistory = VALUES(allergiesHistory),
+                                 habits = VALUES(habits),
+                                 description = VALUES(description),
+                                 tongue = VALUES(tongue),
+                                 status = VALUES(status)
     </insert>
 
     <select id="queryAll" resultType="RecordDTO" parameterType="com.example.model.RecordQueryParams">
