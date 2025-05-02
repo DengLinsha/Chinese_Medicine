@@ -11,7 +11,7 @@
         VALUES (#{patientId}, #{doctorId}, #{patientName}, #{sex}, #{age}, #{phone}, #{oldHistory}, #{allergiesHistory}, #{habits}, #{description}, #{tongue})
     </insert>
 
-    <select id="queryAll" resultType="RecordDTO" parameterType="com.example.model.RecordQueryParams">
+    <select id="queryAll" resultType="RecordDTO" parameterType="map">
         SELECT
         r.recordId,
         r.patientName,
@@ -44,7 +44,7 @@
             </if>
             <!-- 如果传入了doctorId，则按医生ID筛选 -->
             <if test="doctorId != null">
-                AND d.doctorId = #{doctorId}
+                AND r.doctorId = #{doctorId}
             </if>
         </where>
         ORDER BY
@@ -63,11 +63,13 @@
                     #{status}
                 </foreach>
             </if>
-            <if test="patientName != null and patientName != ''">
-                AND r.patientName LIKE CONCAT('%', #{patientName}, '%')
+            <!-- 如果传入了patientId，则按患者ID筛选 -->
+            <if test="patientId != null">
+                AND r.patientId = #{patientId}
             </if>
-            <if test="doctorName != null and doctorName != ''">
-                AND d.doctorName LIKE CONCAT('%', #{doctorName}, '%')
+            <!-- 如果传入了doctorId，则按医生ID筛选 -->
+            <if test="doctorId != null">
+                AND r.doctorId = #{doctorId}
             </if>
         </where>
     </select>
