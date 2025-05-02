@@ -107,7 +107,7 @@ export default {
             },
             xAxis: {
                 type: 'category',
-                data: filteredRecordList.map(item => item.createTime)
+                data: filteredRecordList.map(item => item.createTime.split('T')[0])
             },
             yAxis: {
                 type: 'value'

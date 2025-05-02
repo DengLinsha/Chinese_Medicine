@@ -30,6 +30,7 @@ create table patient (
                          sex tinyint not null comment '性别（0：男，1：女）',
                          userId integer,
                          primary key (patientId),
+                         UNIQUE KEY uniq_userId (userId),
                          FOREIGN KEY (userId) REFERENCES user(userId)
 );
 create table record (
@@ -38,7 +39,7 @@ create table record (
                         patientId integer,
                         description text not null comment '病情描述',
                         tongue varchar(255) comment '舌像',
-                        status tinyint default 0 comment '病历状态（0：未查看，1：已查看，2：已诊断，3：诊断结束）',
+                        status tinyint comment '病历状态（0：未查看，1：已查看，2：已诊断，3：诊断结束）',
                         patientName varchar(255) comment '患者姓名',
                         sex tinyint not null comment '性别（0：男，1：女）',
                         age integer NOT NULL comment '年龄',

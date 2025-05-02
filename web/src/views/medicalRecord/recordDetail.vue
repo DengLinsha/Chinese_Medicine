@@ -48,7 +48,7 @@
           <div class="line"></div>
         </el-col>
         <el-col :span="12">
-          <div v-if="record.diagnostic != null" style="">
+          <div v-if="record.status == 2 || record.status == 3" style="">
             <div style="line-height: 40px;"><span style="font-weight: bold;">主诉：</span>{{ record.description }}</div>
             <div style="line-height: 40px;"><span style="font-weight: bold;">既往史：</span>{{ record.oldHistory }}</div>
             <div style="line-height: 40px;"><span style="font-weight: bold;">过敏史：</span>{{ record.allergiesHistory }}</div>
@@ -67,8 +67,8 @@
       </el-row>
 
       <div class="btn">
-        <el-button v-if="record.status != 3" type="primary" @click="endDialog">结束诊断</el-button>
-        <el-button @click="comment">对此诊断有疑问？</el-button>
+        <el-button v-if="record.status == 2" type="primary" @click="endDialog">结束诊断</el-button>
+        <el-button v-if="record.status == 2 || record.status == 3 " @click="comment">对此诊断有疑问？</el-button>
       </div>
 
       <div class="rate" v-if="show == true" style="margin-top: 10px;">

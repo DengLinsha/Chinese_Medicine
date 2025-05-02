@@ -49,7 +49,7 @@
     </el-container>
 
     <!-- 修改基础信息 -->
-    <el-dialog title="修改基础信息" width=65% :visible.sync="userInfoVisible">
+    <el-dialog title="修改基础信息" width=65% :visible.sync="userInfoVisible" :close-on-click-modal="false">
       <el-form :model="userInfo" :rules="userInfoRule" ref="userInfoRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
@@ -93,7 +93,7 @@
       </div>
     </el-dialog>
     <!-- 修改患者个人信息 -->
-    <el-dialog v-if="userInfo.role === 0" title="修改患者信息" width=65% :visible.sync="updateInfoVisible">
+    <el-dialog v-if="userInfo.role === 0" title="修改患者信息" width=65% :visible.sync="updateInfoVisible" :close-on-click-modal="false">
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
@@ -108,15 +108,10 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="性别" prop="sex">
-              <el-switch 
-                v-model="infoForm.sex"
-                active-color="#a8824a"
-                inactive-color=""
-                active-value="0"
-                active-text="男"
-                inactive-value="1"
-                inactive-text="女">
-              </el-switch>
+              <el-radio-group v-model="infoForm.sex">
+                <el-radio :label="0">男</el-radio>
+                <el-radio :label="1">女</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -131,7 +126,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="生活习惯">
-              <el-input type="textarea" v-model="infoForm.habits" placeholder="请输入过敏史（可以包括饮食、睡眠、情绪、烟酒史等）" ></el-input>
+              <el-input type="textarea" v-model="infoForm.habits" placeholder="请输入生活习惯（可以包括饮食、睡眠、情绪、烟酒史等）" ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -142,7 +137,7 @@
       </div>
     </el-dialog>
     <!-- 修改医生个人信息 -->
-    <el-dialog v-if="userInfo.role === 1" title="修改医生信息" width=65% :visible.sync="updateInfoVisible">
+    <el-dialog v-if="userInfo.role === 1" title="修改医生信息" width=65% :visible.sync="updateInfoVisible" :close-on-click-modal="false">
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
@@ -303,11 +298,12 @@ export default {
       this.$refs.infoFormRef.validate(async (valid) => {
         if (valid) {
           try {
+            this.infoForm.userId = this.userInfo.userId
             const res = await updatePatientInfo(this.infoForm)
             if (res) {
               this.$message.success("修改成功")
               this.updateInfoVisible = false;
-              this.$bus.$emit('user-info-updated');
+              this.$bus.$emit('user-info-updated', this.infoForm);
             }
           } catch (error) {
             console.log(error);
@@ -321,6 +317,7 @@ export default {
       this.$refs.infoFormRef.validate(async (valid) => {
         if (valid) {
           try {
+            this.infoForm.userId = this.userInfo.userId
             const res = await updateDoctorInfo(this.infoForm)
             if (res) {
               this.$message.success("修改成功")
