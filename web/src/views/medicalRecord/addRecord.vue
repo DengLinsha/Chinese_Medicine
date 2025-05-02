@@ -209,7 +209,7 @@ export default {
     addRecord() {
       this.$refs.recordInfoFormRef.validate(async (valid) => {
         if (valid) {
-          const result = await addRecord({...this.patientInfoForm, ...this.recordInfoForm})
+          const result = await addRecord({...this.userInfo, ...this.patientInfoForm, ...this.recordInfoForm})
           if (result) {
             this.$message.success("病历创建成功");
           }

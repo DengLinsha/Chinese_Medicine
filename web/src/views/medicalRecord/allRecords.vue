@@ -13,19 +13,20 @@
             </template>
             {{ item.patientName }}
           </el-descriptions-item>
-          <el-descriptions-item>
-            <template slot="label">
-              <i class="el-icon-mobile-phone"></i>
-              手机号
-            </template>
-            {{ item.phone }}
-          </el-descriptions-item>
+          
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-time"></i>
               年龄
             </template>
             {{ item.age }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <i class="el-icon-time"></i>
+              就诊日期
+            </template>
+            {{ item.createTime.replace('T', ' ').split('.')[0] }}
           </el-descriptions-item>
           <el-descriptions-item :contentStyle="{ width: '350px' }">
             <template slot="label">
