@@ -146,6 +146,21 @@
     <el-dialog v-if="userInfo.role === 1" title="修改医生信息" width=65% :visible.sync="updateInfoVisible" :close-on-click-modal="false">
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
+          <!-- 上传头像 -->
+          <el-col :span="12">
+            <el-form-item label="头像">
+              <el-upload
+                class="avatar-uploader"
+                action="/api/upload/avatar"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+              >
+                <img v-if="infoForm.avatarUrl" :src="infoForm.avatarUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="姓名" prop="doctorName">
               <el-input v-model="infoForm.doctorName" placeholder="请输入姓名" clearable></el-input>
@@ -357,6 +372,22 @@ export default {
         // });          
       });
     },
+    handleAvatarSuccess(res) {
+      // 假设返回格式为 { url: 'http://xxx.com/avatar.jpg' }
+      this.infoForm.avatarUrl = res.url;
+    },
+    beforeAvatarUpload(file) {
+      const isImage = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isImage) {
+        this.$message.error('只能上传 JPG/PNG 格式的图片');
+      }
+      if (!isLt2M) {
+        this.$message.error('图片大小不能超过 2MB');
+      }
+      return isImage && isLt2M;
+    }
   },
 };
 </script>
@@ -373,6 +404,28 @@ export default {
 .aside-container {
   transition: width 0.3s ease; /* 添加宽度变化的过渡效果 */
 }
+
+.avatar-uploader {
+  width: 100px;
+  height: 100px;
+  border: 1px dashed #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+}
+
 
 :deep(.el-badge__content.is-fixed.is-dot) {
   top: 6px;
