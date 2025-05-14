@@ -8,7 +8,7 @@
         style="width: 200px; margin-right: 10px"
       />
       <el-button type="primary" @click="getPatients">查询</el-button>
-      <el-button style="border-color: #a8824a; color: #a8824a;" @click="handleAdd">新增患者</el-button>
+      <el-button style="border-color: #a8824a; color: #a8824a;" @click="dialogVisible = true">新增患者</el-button>
     </el-card>
     <!-- 患者表格 -->
     <el-table :data="patientList" border style="width: 100%">
@@ -18,20 +18,24 @@
       <el-table-column prop="age" label="年龄" />
       <el-table-column prop="phone" label="联系方式" />
       <el-table-column label="操作">
-        <template #scope="row">
-          <el-button size="mini" @click="handleEdit(row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row)"
-            >删除</el-button
-          >
+        <template #default="scope">
+          <el-button size="small" type="text">详情</el-button>
+          <el-button size="small" type="text" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button size="small" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="infoForm.id ? '编辑患者' : '新增患者'" width = 65% :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog :title="infoForm.patientId ? '编辑患者' : '新增患者'" width = 65% :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="infoForm.username" placeholder="请输入用户名" clearable autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="infoForm.phone" placeholder="请输入手机号" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -55,11 +59,6 @@
           <el-col :span="12">
             <el-form-item label="年龄" prop="age">
               <el-input v-model="infoForm.age" placeholder="请输入年龄" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="手机号" prop="phone">
-              <el-input v-model="infoForm.phone" placeholder="请输入手机号" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -131,9 +130,6 @@ export default {
   },
   mounted() {},
   methods: {
-    handleAdd() {
-        this.dialogVisible = true;
-    },
     reset(){
       this.$refs.infoFormRef.resetFields();
       this.dialogVisible = false;
