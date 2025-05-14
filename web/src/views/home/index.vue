@@ -14,7 +14,7 @@
             <el-dropdown-item icon="el-icon-user-solid">{{ userInfo.username }}</el-dropdown-item>
             <hr />
             <el-dropdown-item icon="el-icon-edit" @click.native="userInfoVisible = true">基础信息</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-message" @click.native="updateInfoVisible = true">详细信息</el-dropdown-item>
+            <el-dropdown-item v-if="userInfo.role !== 2" icon="el-icon-message" @click.native="updateInfoVisible = true">详细信息</el-dropdown-item>
             <!-- <el-dropdown-item
               icon="el-icon-upload"
               @click.native="uploadVisible = true"
@@ -67,6 +67,7 @@
               <el-radio-group v-model="userInfo.role" disabled>
                 <el-radio :label="0">患者</el-radio>
                 <el-radio :label="1">医师</el-radio>
+                <el-radio :label="2">管理员</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -93,7 +94,7 @@
       </div>
     </el-dialog>
     <!-- 修改患者个人信息 -->
-    <el-dialog v-if="userInfo.role === 0" title="修改患者信息" width=65% :visible.sync="updateInfoVisible" :close-on-click-modal="false">
+    <el-dialog v-if="userInfo.role === 0" title="修改患者信息" width=60% :visible.sync="updateInfoVisible" :close-on-click-modal="false">
       <el-form :model="infoForm" :rules="infoRule" ref="infoFormRef" label-width="80px">
         <el-row :gutter="30">
           <el-col :span="12">
@@ -107,6 +108,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="infoForm.phone" placeholder="请输入手机号" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="性别" prop="sex">
               <el-radio-group v-model="infoForm.sex">
                 <el-radio :label="0">男</el-radio>
@@ -114,17 +120,17 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="既往史">
               <el-input type="textarea" v-model="infoForm.oldHistory" placeholder="请输入既往史（既往是否有类似症状、是否患有慢性疾病，如高血压、糖尿病等）" ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="过敏史">
               <el-input type="textarea" v-model="infoForm.allergiesHistory" placeholder="请输入过敏史（对药物、食物或环境因素的过敏情况）" ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="生活习惯">
               <el-input type="textarea" v-model="infoForm.habits" placeholder="请输入生活习惯（可以包括饮食、睡眠、情绪、烟酒史等）" ></el-input>
             </el-form-item>
