@@ -232,7 +232,7 @@ export default {
             // 暂存
             this.recordInfoForm.status = 4;
           }
-          const result = await addRecord({...this.patientInfoForm, ...this.recordInfoForm})
+          const result = await addRecord({...this.userInfo, ...this.patientInfoForm, ...this.recordInfoForm})
           if (result) {
             this.$message.success("病历创建成功");
           }

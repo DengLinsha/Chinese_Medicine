@@ -97,6 +97,7 @@
 
 <script>
 import { getRecordInfo, updateRecord } from '@/api/record';
+import axios from 'axios';
 export default {
   components: {
 
@@ -139,6 +140,13 @@ export default {
     if (this.record.diagnostic) {
         this.diagnostic = {...this.record.diagnostic}
     }
+    axios.post('http://localhost:5000/recommend', {symptoms: this.record.description})
+    .then(response => {
+        console.log('推荐结果:', response.data);
+    })
+    .catch(error => {
+        console.error('请求出错:', error);
+    });
   },
   methods: {
     async goBack() {
