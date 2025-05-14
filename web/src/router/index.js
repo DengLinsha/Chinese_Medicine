@@ -35,14 +35,14 @@ const routes = [
       },
       {
         path:"/home/allRecords",
-        name:"咨询列表",
+        name:"咨询历史",
         icon: "el-icon-document",
         component: () => import('@/views/medicalRecord/allRecords.vue'),
         meta: { roles: [0] }
       },
       {
         path:"/home/docList",
-        name:"医师列表",
+        name:"医师介绍",
         icon: "el-icon-user",
         component: () => import('@/views/medicalRecord/docList.vue'),
         meta: { roles: [0] }
@@ -73,6 +73,42 @@ const routes = [
         icon: "el-icon-c-scale-to-original",
         component: () => import('@/views/statistics/index.vue'),
         meta: { roles: [1] }
+      },
+      // 管理员
+      {
+        path:"/admin/patients",
+        name:"患者管理",
+        icon: "el-icon-user",
+        component: () => import('@/views/admin/patients.vue'),
+        meta: { roles: [2] }
+      },
+      {
+        path:"/admin/doctors",
+        name:"医生管理",
+        icon: "el-icon-service",
+        component: () => import('@/views/admin/doctors.vue'),
+        meta: { roles: [2] }
+      },
+      {
+        path:"/admin/records",
+        name:"病历管理",
+        icon: 'el-icon-bank-card',
+        component: () => import('@/views/admin/records.vue'),
+        meta: { roles: [2] }
+      },
+      {
+        path:"/admin/comments",
+        name:"评论管理",
+        icon: 'el-icon-message',
+        component: () => import('@/views/admin/comments.vue'),
+        meta: { roles: [2] }
+      },
+      {
+        path:"/admin/prescriptions",
+        name:"药方管理",
+        icon: 'el-icon-document',
+        component: () => import('@/views/admin/prescriptions.vue'),
+        meta: { roles: [2] }
       },
     ]
   },

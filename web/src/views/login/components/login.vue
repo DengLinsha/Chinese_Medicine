@@ -85,8 +85,10 @@ export default {
                 this.$message.success("欢迎回来")
                 if (this.$store.state.user.userInfo.role === 0) {
                   this.$router.push({path: '/home'})
-                } else {
+                } else if (this.$store.state.user.userInfo.role === 1) {
                   this.$router.push({path: '/home/diagnosisList'})
+                } else {
+                  this.$router.push({path: '/admin/patients'})
                 }
                 
               }
