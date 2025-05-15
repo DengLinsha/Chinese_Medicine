@@ -198,7 +198,6 @@ export default {
   components: {},
   data() {
     return {
-      defaultActive: this.$route.path,
       userInfoVisible: false,
       updateInfoVisible: false,
       userInfoRule:{
@@ -245,6 +244,9 @@ export default {
   },
 
   computed: {
+    defaultActive() {
+      return this.$route.path
+    },
     userInfo() {
       return this.$store.state.user.userInfo;
     },
